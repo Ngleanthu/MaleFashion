@@ -13,3 +13,17 @@ exports.postAddProducts = (req, res, next) => {
             console.error(err);
         });
 };
+
+exports.getAllProducts = (req, res, next) => {
+    Product.fetchAll()  // Sử dụng phương thức fetchAll trong model Product
+        .then(products => {
+            res.render('admin/manage-products', {
+                prods: products,
+                path: '/manage-products'  // Truyền biến 'path' vào view
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error fetching products');
+        });
+};

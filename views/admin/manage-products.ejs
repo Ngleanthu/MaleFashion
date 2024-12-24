@@ -8,117 +8,135 @@
     </div>
 
     <!-- Modal thêm sản phẩm -->
-<div id="addProductModal" class="fixed inset-0 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg w-1/2">
-        <div class="flex justify-between items-center border-b px-4 py-2">
-            <h2 class="text-lg font-semibold text-gray-800">Thêm sản phẩm mới</h2>
-            <button id="closeAddProductModal" class="text-gray-500 hover:text-gray-700">✖</button>
-        </div>
-        <div class="p-4">
-            <form id="addProductForm" method="POST" action="/manage-products">
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Tên sản phẩm -->
-                    <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700">Tên sản phẩm</label>
-                        <input type="text" id="title" name="title" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+    <div id="addProductModal" class="fixed inset-0 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg w-1/2">
+            <div class="flex justify-between items-center border-b px-4 py-2">
+                <h2 class="text-lg font-semibold text-gray-800">Thêm sản phẩm mới</h2>
+                <button id="closeAddProductModal" class="text-gray-500 hover:text-gray-700">✖</button>
+            </div>
+            <div class="p-4">
+                <form id="addProductForm" method="POST" action="/manage-products">
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Tên sản phẩm -->
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700">Tên sản phẩm</label>
+                            <input type="text" id="title" name="title" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Ảnh sản phẩm -->
+                        <div>
+                            <label for="imgUrl" class="block text-sm font-medium text-gray-700">Ảnh sản phẩm</label>
+                            <input type="text" id="imgUrl" name="imgUrl" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Mô tả sản phẩm -->
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700">Mô tả</label>
+                            <input type="text" id="description" name="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Giá sản phẩm -->
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700">Giá</label>
+                            <input type="text" id="price" name="price" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Màu sắc sản phẩm -->
+                        <div>
+                            <label for="color" class="block text-sm font-medium text-gray-700">Màu sắc</label>
+                            <input type="text" id="color" name="color" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Danh mục sản phẩm -->
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700">Danh mục</label>
+                            <input type="text" id="category" name="category" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Size sản phẩm -->
+                        <div>
+                            <label for="size" class="block text-sm font-medium text-gray-700">Size</label>
+                            <input type="text" id="size" name="size" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Thương hiệu sản phẩm -->
+                        <div>
+                            <label for="brand" class="block text-sm font-medium text-gray-700">Thương hiệu</label>
+                            <input type="text" id="brand" name="brand" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Tags sản phẩm -->
+                        <div>
+                            <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
+                            <input type="text" id="tags" name="tags" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <!-- Số lượng sản phẩm -->
+                        <div>
+                            <label for="amount" class="block text-sm font-medium text-gray-700">Số lượng</label>
+                            <input type="number" id="amount" name="amount" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
                     </div>
-                    
-                    <!-- Ảnh sản phẩm -->
-                    <div>
-                        <label for="imgUrl" class="block text-sm font-medium text-gray-700">Ảnh sản phẩm</label>
-                        <input type="text" id="imgUrl" name="imgUrl" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <div class="mt-4 flex justify-end">
+                        <button type="button" id="cancelAddProduct" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mr-2">Hủy</button>
+                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Thêm sản phẩm</button>
                     </div>
-                    
-                    <!-- Mô tả sản phẩm -->
-                    <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700">Mô tả</label>
-                        <input type="text" id="description" name="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                    
-                    <!-- Giá sản phẩm -->
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700">Giá</label>
-                        <input type="text" id="price" name="price" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                    
-                    <!-- Màu sắc sản phẩm -->
-                    <div>
-                        <label for="color" class="block text-sm font-medium text-gray-700">Màu sắc</label>
-                        <input type="text" id="color" name="color" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                    
-                    <!-- Danh mục sản phẩm -->
-                    <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700">Danh mục</label>
-                        <input type="text" id="category" name="category" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                    
-                    <!-- Size sản phẩm -->
-                    <div>
-                        <label for="size" class="block text-sm font-medium text-gray-700">Size</label>
-                        <input type="text" id="size" name="size" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                    
-                    <!-- Thương hiệu sản phẩm -->
-                    <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700">Thương hiệu</label>
-                        <input type="text" id="brand" name="brand" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                    
-                    <!-- Tags sản phẩm -->
-                    <div>
-                        <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
-                        <input type="text" id="tags" name="tags" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                    
-                    <!-- Số lượng sản phẩm -->
-                    <div>
-                        <label for="amount" class="block text-sm font-medium text-gray-700">Số lượng</label>
-                        <input type="number" id="amount" name="amount" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    </div>
-                </div>
-                <div class="mt-4 flex justify-end">
-                    <button type="button" id="cancelAddProduct" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mr-2">Hủy</button>
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Thêm sản phẩm</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-
+    ` }) %>
     <!-- Danh sách sản phẩm -->
     <div class="mt-4 bg-white shadow-md rounded-lg p-4">
         <table class="min-w-full border">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-2 text-left">Tên sản phẩm</th>
-                    <th class="px-4 py-2 text-left">Mô tả</th>
-                    <th class="px-4 py-2 text-left">Giá</th>
-                    <th class="px-4 py-2 text-left">Hành động</th>
+                    <th class="px-4 py-2 text-left">Title</th>
+                    
+                    <th class="px-4 py-2 text-left">Price</th>
+                    <th class="px-4 py-2 text-left">Image</th>
+                    <th class="px-4 py-2 text-left">Size</th>
+                    <th class="px-4 py-2 text-left">Brand</th>
+                    <th class="px-4 py-2 text-left">Tags</th>
+                    <th class="px-4 py-2 text-left">Amount</th>
+                    <th class="px-4 py-2 text-left">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="border px-4 py-2">Bàn gỗ</td>
-                    <td class="border px-4 py-2">Bàn làm việc chất lượng cao</td>
-                    <td class="border px-4 py-2">1,500,000 VND</td>
-                    <td class="border px-4 py-2">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Sửa</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border px-4 py-2">Ghế xoay</td>
-                    <td class="border px-4 py-2">Ghế văn phòng hiện đại</td>
-                    <td class="border px-4 py-2">850,000 VND</td>
-                    <td class="border px-4 py-2">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Sửa</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Xóa</button>
-                    </td>
-                </tr>
-            </tbody>
+                <% if (prods && prods.length > 0) { %> <!-- Kiểm tra xem mảng prods có dữ liệu không -->
+                  <% prods.forEach(function(product) { %>
+                    <tr>
+                      <td class="border px-4 py-2"><%= product.title %></td>
+                      
+                      <td class="border px-4 py-2"><%= product.price %>₫</td>
+                      <td class="border px-4 py-2"><img src="<%= product.imgUrl %>" alt="<%= product.title %>" class="w-16 h-16 object-cover"></td>
+                      <td class="border px-4 py-2"><%= product.size %></td>
+                      <td class="border px-4 py-2"><%= product.brand %></td>
+                      <td class="border px-4 py-2"><%= product.tags %></td>
+                      <td class="border px-4 py-2"><%= product.amount %></td>
+                      <td class="border px-4 py-2">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Edit</button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Delete</button>
+                      </td>
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="8" class="text-center">No Products Found!</td>
+                  </tr>
+                <% } %>
+              </tbody>              
         </table>
-        
     </div>
-` }) %>
+
+
+</div>
+
+        
+</div>
+
+<!-- JS Plugins -->
+<script src="js/addProduct.js"></script>
+
+</body>
+</html>
