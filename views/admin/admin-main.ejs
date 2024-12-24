@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title><%= title %></title>
+    
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gray-800 text-white min-h-screen">
+            <div class="p-4 text-2xl font-bold">Dashboard</div>
+            <ul class="mt-8 space-y-4">
+                <li>
+                    <a href="/dashboard" class="block py-2 px-4 hover:bg-gray-700 rounded <%= path === '/dashboard' ? 'active' : '' %>">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/manage-users" class="block py-2 px-4 hover:bg-gray-700 rounded <%= path === '/manage-users' ? 'active' : '' %>">Account Management</a>
+                </li>
+                <li>
+                    <a href="/manage-products" class="block py-2 px-4 hover:bg-gray-700 rounded <%= path === '/manage-products' ? 'active' : '' %>">Product Management</a>
+                </li>
+                <li>
+                    <a href="/manage-orders" class="block py-2 px-4 hover:bg-gray-700 rounded <%= path === '/manage-orders' ? 'active' : '' %>">Order Management</a>
+                </li>
+                <li>
+                    <a href="/" class="block py-2 px-4 hover:bg-gray-700 rounded">Sign Out</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <%- body %>
+        </div>
+
+        
+    </div>
+
+    <!-- JS Plugins -->
+    <script src="js/addProduct.js"></script>
+    
+</body>
+</html>

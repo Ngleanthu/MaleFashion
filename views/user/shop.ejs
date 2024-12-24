@@ -1,0 +1,235 @@
+<%- include('../includes/header') %>
+    <title>Male-Fashion | Shop</title>
+</head>
+<body>
+    <%- include('../includes/navigation') %>
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shop</h4>
+                        <div class="breadcrumb__links">
+                            <a href="/">Home</a>
+                            <span>Shop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="shop__sidebar">
+                        <div class="shop__sidebar__search">
+                            <form action="#">
+                                <input type="text" placeholder="Search...">
+                                <button type="submit"><span class="icon_search"></span></button>
+                            </form>
+                        </div>
+                        <div class="shop__sidebar__accordion">
+                            <div class="accordion" id="accordionExample">
+                                <form id="filterForm">
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__categories">
+                                                    <ul class="nice-scroll">
+                                
+                                                        <li><label><input type="checkbox" name="categories" value="Bags"> Bags (20)</label></li>
+                                                        <li><label><input type="checkbox" name="categories" value="Clothing"> Clothing (20)</label></li>
+                                                        <li><label><input type="checkbox" name="categories" value="Shoes"> Shoes (20)</label></li>
+                                                        <li><label><input type="checkbox" name="categories" value="Accessories"> Accessories (20)</label></li>
+                                                        <li><label><input type="checkbox" name="categories" value="Kids"> Kids (20)</label></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__brand">
+                                                    <ul>
+                                                        <li><label><input type="checkbox" name="brand" value="Louis Vuitton"> Louis Vuitton</label></li>
+                                                        <li><label><input type="checkbox" name="brand" value="Chanel"> Chanel</label></li>
+                                                        <li><label><input type="checkbox" name="brand" value="Hermes"> Hermes</label></li>
+                                                        <li><label><input type="checkbox" name="brand" value="Gucci"> Gucci</label></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+                                        </div>
+                                        <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__price">
+                                                    <ul>
+                                                        <li><label><input type="checkbox" name="price" value="$0-$50">$0.00 - $50.00</label></li>
+                                                        <li><label><input type="checkbox" name="price" value="$50-$100">$50.00 - $100.00</label></li>
+                                                        <li><label><input type="checkbox" name="price" value="$100-$150">$100.00 - $150.00</label></li>
+                                                        <li><label><input type="checkbox" name="price" value="$150-$200">$150.00 - $200.00</label></li>
+                                                        <li><label><input type="checkbox" name="price" value="$200-$250">$200.00 - $250.00</label></li>
+                                                        <li><label><input type="checkbox" name="price" value="$250+">250.00+</label></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                                        </div>
+                                        <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__size">
+                                                    <label><input type="checkbox" name="size" value="XS"> XS</label>
+                                                    <label><input type="checkbox" name="size" value="S"> S</label>
+                                                    <label><input type="checkbox" name="size" value="M"> M</label>
+                                                    <label><input type="checkbox" name="size" value="L"> L</label>
+                                                    <label><input type="checkbox" name="size" value="XL"> XL</label>
+                                                    <label><input type="checkbox" name="size" value="2XL"> 2XL</label>
+                                                    <label><input type="checkbox" name="size" value="3XL"> 3XL</label>
+                                                    <label><input type="checkbox" name="size" value="4XL"> 4XL</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
+                                        </div>
+                                        <div id="collapseFive" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__color">
+                                                    <label class="c-1"><input type="checkbox" name="color" value="Color Black"><span class="color-circle" style="background-color: black;"></span></label>
+                                                    <label class="c-2"><input type="checkbox" name="color" value="Color Blue"><span class="color-circle" style="background-color: blue;"></span></label>
+                                                    <label class="c-3"><input type="checkbox" name="color" value="Color Yellow"><span class="color-circle" style="background-color: yellow;"></span></label>
+                                                    <label class="c-4"><input type="checkbox" name="color" value="Color Gray"><span class="color-circle" style="background-color: gray;"></span></label>
+                                                    <label class="c-5"><input type="checkbox" name="color" value="Color Green"><span class="color-circle" style="background-color: green;"></span></label>
+                                                    <label class="c-6"><input type="checkbox" name="color" value="Color Pink"><span class="color-circle" style="background-color: pink;"></span></label>
+                                                    <label class="c-7"><input type="checkbox" name="color" value="Color Purple"><span class="color-circle" style="background-color: purple;"></span></label>
+                                                    <label class="c-8"><input type="checkbox" name="color" value="Color Red"><span class="color-circle" style="background-color: red;"></span></label>
+                                                    <label class="c-9"><input type="checkbox" name="color" value="Color White"><span class="color-circle" style="background-color: white;"></span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
+                                        </div>
+                                        <div id="collapseSix" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__tags">
+                                                    
+                                                    <label><input type="checkbox" name="tags" value="Leather"> Leather</label>
+                                                    <label><input type="checkbox" name="tags" value="Unisex"> Unisex</label>
+                                                    
+                                                    <label><input type="checkbox" name="tags" value="Formal"> Formal</label>
+                                                    <label><input type="checkbox" name="tags" value="Sport"> Sport</label>
+                                                    <label><input type="checkbox" name="tags" value="Handmade"> Handmade</label>
+                                                    <label><input type="checkbox" name="tags" value="Casual"> Casual</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="filter-btn">
+                                        <button type="submit">Filter</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="shop__product__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__left">
+                                    <p>Showing 1–12 of 126 results</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__right">
+                                    <p>Sort by Price:</p>
+                                    <select>
+                                        <option value="">Low To High</option>
+                                        <option value="">High To Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <% if (prods.length > 0) { %>
+                            <% for (let product of prods) { %>
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="<%= product.imgUrl %>">
+                                        <ul class="product__hover">
+                                            <li><a href="#"><img src="/img/icon/heart.png" alt=""></a></li>
+                                            <li><a href="#"><img src="/img/icon/compare.png" alt=""> <span>Compare</span></a>
+                                            </li>
+                                            <li><a href="#"><img src="/img/icon/search.png" alt=""></a></li>
+                                        </ul>
+                                    </div>                         
+                                    <div class="product__item__text">
+                                        <h6><%= product.title %></h6>
+                                        <a href="#" class="add-cart">+ Add To Cart</a>
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <h5><%= product.price %> ₫</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                        <% } else { %>
+                            <h1>No Products Found!</h1>
+                        <% } %>
+                        
+                    </div>
+                    <!-- <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product__pagination">
+                                <a class="active" href="#">1</a>
+                                <a href="#">2</a>
+                                <a href="#">3</a>
+                                <span>...</span>
+                                <a href="#">21</a>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+    <%- include('../includes/footer') %>
+</body>
+
+</html>
