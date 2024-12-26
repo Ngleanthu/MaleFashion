@@ -41,6 +41,34 @@ class Product {
                 console.log(err);
             });
     }
+    static findById(prodId){
+        const db = getDb();
+        return db.collection('products')
+            .find({ _id : new mongodb.ObjectId(prodId)})
+            .next()
+            .then(product => {
+                return product;
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    // Update product by ID
+    static findByIdAndUpdate(prodId, updatedData) {
+        const db = getDb();
+        return db.collection('products')
+            .updateOne(
+                { _id: new mongodb.ObjectId(prodId) }, // Filter by product ID
+                { $set: updatedData }                 // Update fields
+            )
+            .then(result => {
+                console.log('Product updated:', result);
+                return result;
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 }
 
 module.exports = Product;

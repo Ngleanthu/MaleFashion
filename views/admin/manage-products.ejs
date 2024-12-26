@@ -1,10 +1,10 @@
 <%- include('admin-main', { title: 'Product Management', body: `
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Quản lý sản phẩm</h1>
-    <p class="text-gray-600">Trang quản lý các sản phẩm trong cửa hàng.</p>
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Products Management</h1>
+    <p class="text-gray-600">Page for managing products in the store.</p>
 
     <!-- Nút mở modal thêm sản phẩm -->
     <div class="mt-4">
-        <button id="openAddProductModal" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Thêm sản phẩm</button>
+        <button id="openAddProductModal" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Add product</button>
     </div>
 
     <!-- Modal thêm sản phẩm -->
@@ -115,7 +115,8 @@
                       <td class="border px-4 py-2"><%= product.tags %></td>
                       <td class="border px-4 py-2"><%= product.amount %></td>
                       <td class="border px-4 py-2">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Edit</button>
+                        <button onclick="window.location.href='/manage-products/<%= product._id %>'" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Edit</button>
                         <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Delete</button>
                       </td>
                     </tr>
