@@ -117,7 +117,10 @@
                       <td class="border px-4 py-2">
                         <button onclick="window.location.href='/manage-products/<%= product._id %>'" 
                             class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Edit</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Delete</button>
+                            <form action="/manage-products/delete-product/<%= product._id %>" method="POST" style="display: inline;">
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Delete</button>
+                            </form>
+                            
                       </td>
                     </tr>
                   <% }); %>

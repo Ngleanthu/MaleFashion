@@ -81,3 +81,15 @@ exports.postEditProduct = async (req, res, next) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.postDeleteProduct = (req, res, next) => {
+    const productId = req.params.id; // Sử dụng id làm tham số
+    Product.deleteById(productId)
+        .then( ()=> {
+            console.log('Destroyed product');
+            res.redirect('/manage-products');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+};

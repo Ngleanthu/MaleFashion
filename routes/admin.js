@@ -9,4 +9,5 @@ router.get('/:id', adminController.getEditProduct);
 
 // Cập nhật sản phẩm
 router.post('/:id', adminController.postEditProduct);
+router.post('/delete-product/:id', adminController.postDeleteProduct);
 module.exports = router;
