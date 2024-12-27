@@ -54,14 +54,15 @@
                                                 <h5><%= p.price %> ₫</h5>
                                             </div>
                                         </td>
+
                                         <td class="quantity__item">
                                             <div class="quantity">
                                                 <div class="pro-qty-2">
-                                                    <input type="text" value="<%= p.quantity %>">
+                                                    <input type="number" class="quantity-input" data-price="<%= p.price %>" data-id="<%= p._id %>" value="<%= p.quantity %>" min="0">
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="cart__price">
+                                        <td class="cart__price" id="total-<%= p._id %>">
                                             <%= new Intl.NumberFormat('vi-VN').format((p.price * p.quantity) * 1000) %> ₫
                                         </td>
                                         
