@@ -190,12 +190,18 @@
                                             <li><a href="#"><img src="/img/icon/heart.png" alt=""></a></li>
                                             <li><a href="#"><img src="/img/icon/compare.png" alt=""> <span>Compare</span></a>
                                             </li>
-                                            <li><a href="/shop/shop-details/<%= product._id %>"><img src="/img/icon/search.png" alt=""></a></li>
+                                            <li><a href="/shop/<%= product._id %>"><img src="/img/icon/search.png" alt=""></a></li>
                                         </ul>
                                     </div>                         
                                     <div class="product__item__text">
                                         <h6><%= product.title %></h6>
-                                        <a href="#" class="add-cart">+ Add To Cart</a>
+                                        <form id="addToCartForm" action="/shopping-cart" method="POST">
+                                            <!-- <a href="#" class="add-cart" onclick="submitForm();">+ Add To Cart</a> -->
+                                            <button type="submit" class="add-cart">+ Add To Cart</button>
+                                            <input type="hidden" name="productId" value="<%= product._id %>">
+                                        </form>
+                                        
+                                        
                                         <div class="rating">
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>
