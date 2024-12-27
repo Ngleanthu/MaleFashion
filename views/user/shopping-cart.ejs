@@ -23,105 +23,110 @@
     <!-- Breadcrumb Section End -->
 
     <!-- Shopping Cart Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="shopping__cart__table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% let subtotal = 0; %> <!-- Khai báo biến subtotal -->
-                                <% if (products.length > 0) {  %>
-                                    <% for (let p of products) { 
-                                        const totalPrice = p.price * p.quantity;  // Tính tổng tiền cho mỗi món
-                                        subtotal += totalPrice;  // Cộng dồn vào subtotal
-                                    %>
+    <form action="/shopping-cart/update" method="POST">
+        <section class="shopping-cart spad">
+            <div class="container">
+                <div class="row">
+                    
+                    <div class="col-lg-8">
+                        <div class="shopping__cart__table">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td class="product__cart__item">
-                                            <div class="product__cart__item__pic">
-                                                <img src="<%= p.imgUrl %>" alt="" style="width: 90px; height: 90px; object-fit: cover;">
-                                            </div>
-                                            <div class="product__cart__item__text">
-                                                <h6><%= p.title %></h6>
-                                                <h5><%= p.price %> ₫</h5>
-                                            </div>
-                                        </td>
-                                        <td class="quantity__item">
-                                            <div class="quantity">
-                                                <div class="pro-qty-2">
-                                                    <input type="text" value="<%= p.quantity %>">
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% let subtotal = 0; %> <!-- Khai báo biến subtotal -->
+                                    <% if (products.length > 0) {  %>
+                                        <% for (let p of products) { 
+                                            const totalPrice = p.price * p.quantity;  // Tính tổng tiền cho mỗi món
+                                            subtotal += totalPrice;  // Cộng dồn vào subtotal
+                                        %>
+                                        <tr>
+                                            <td class="product__cart__item">
+                                                <div class="product__cart__item__pic">
+                                                    <img src="<%= p.imgUrl %>" alt="" style="width: 90px; height: 90px; object-fit: cover;">
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td class="cart__price">
-                                            <%= new Intl.NumberFormat('vi-VN').format((p.price * p.quantity) * 1000) %> ₫
-                                        </td>
-                                        
-                                        <td class="cart__close">
-                                            <form action="/shopping-cart/<%= p._id %>" method="POST" style="display:inline;">
-                                                <input type="hidden" name="productId" value="<%= p._id %>"> <!-- Đây là phần thêm productId vào body -->
-                                                <button type="submit" style="border: none; background: transparent; cursor: pointer;">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </form>
+                                                <div class="product__cart__item__text">
+                                                    <h6><%= p.title %></h6>
+                                                    <h5><%= p.price %> ₫</h5>
+                                                </div>
+                                            </td>
+                                            <td class="quantity__item">
+                                                <div class="quantity">
+                                                    <div class="pro-qty-2">
+                                                        <input type="text" value="<%= p.quantity %>">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="cart__price">
+                                                <%= new Intl.NumberFormat('vi-VN').format((p.price * p.quantity) * 1000) %> ₫
+                                            </td>
                                             
+                                            <td class="cart__close">
+                                                <form action="/shopping-cart/<%= p._id %>" method="POST" style="display:inline;">
+                                                    <input type="hidden" name="productId" value="<%= p._id %>"> <!-- Đây là phần thêm productId vào body -->
+                                                    <button type="submit" style="border: none; background: transparent; cursor: pointer;">
+                                                        <i class="fa fa-close"></i>
+                                                    </button>
+                                                </form>
+                                                
+                                                
+                                            </td>
                                             
-                                        </td>
-                                        
-                                    </tr>
-                                    <% }; %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="4">No products in the cart.</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn">
-                                <a href="/shop">Continue Shopping</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
-                                <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="cart__discount">
-                        <h6>Discount codes</h6>
-                        <form action="#">
-                            <input type="text" placeholder="Coupon code">
-                            <button type="submit">Apply</button>
-                        </form>
-                    </div>
-                    <div class="cart__total">
-                        <h6>Cart total</h6>
-                        <ul>
+                                        </tr>
+                                        <% }; %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="4">No products in the cart.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
                             
-                            <li>Subtotal <span><%= new Intl.NumberFormat('vi-VN').format(subtotal * 1000) %> ₫</span></li>
-                            <!-- Tính total nếu có giảm giá hoặc các chi phí khác -->
-                            <li>Total <span><%= new Intl.NumberFormat('vi-VN').format(subtotal * 1000) %> ₫</span></li>
-                        </ul>
-                        <a href="/checkout" class="primary-btn">Proceed to checkout</a>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="continue__btn">
+                                    <a href="/shop">Continue Shopping</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="continue__btn update__btn">
+                                    <a href="/shopping-cart/update-cart"><i class="fa fa-spinner"></i> Update cart</a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col-lg-4">
+                        <!-- <div class="cart__discount">
+                            <h6>Discount codes</h6>
+                            <form action="#">
+                                <input type="text" placeholder="Coupon code">
+                                <button type="submit">Apply</button>
+                            </form>
+                        </div> -->
+                        <div class="cart__total">
+                            <h6>Cart total</h6>
+                            <ul>
+                                
+                                <li>Subtotal <span><%= new Intl.NumberFormat('vi-VN').format(subtotal * 1000) %> ₫</span></li>
+                                <!-- Tính total nếu có giảm giá hoặc các chi phí khác -->
+                                <li>Total <span><%= new Intl.NumberFormat('vi-VN').format(subtotal * 1000) %> ₫</span></li>
+                            </ul>
+                            <a href="/checkout" class="primary-btn">Proceed to checkout</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </form>
     <!-- Shopping Cart Section End -->
     <%- include('../includes/footer') %>
 </body>
