@@ -1,0 +1,73 @@
+<%- include('../includes/header') %>
+<title>Orders List</title>
+</head>
+<body>
+<%- include('../includes/navigation') %>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Your orders</h4>
+                    <div class="breadcrumb__links">
+                        <a href="/">Home</a>
+                        <a href="/shop">Shop</a>
+                        <span>Your orders</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<section class="order-history">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <% if (user) { %>
+                <h4 class="text-center" style="margin: 20px 0px;">Welcome, <strong><%= user.username %></strong>! Here are your orders:</h4>
+                <% } else { %>
+                <h4 class="text-center" style="margin: 20px 0px;">Welcome! Please sign in to view your orders.</h4>
+                <% } %>
+
+                <% if (orders.length === 0) { %>
+                <p class="text-center">You have no orders yet.</p>
+                <% } else { %>
+                <table class="order-summary-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; padding: 10px;">Order ID</th>
+                            <th style="text-align: left; padding: 10px;">Date</th>
+                            <th style="text-align: left; padding: 10px;">Status</th>
+                            <th style="text-align: left; padding: 10px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orders.forEach(order => { %>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 10px;"><%= order._id %></td>
+                            <td style="padding: 10px;"><%= String(order.createdAt).replace(" ", ", ") %></td>
+                            <td style="padding: 10px;"><%= order.status %></td>
+                            <td style="padding: 10px;">
+                                <a href="/order/<%= order._id %>" class="site-btn-details btn-primary ">View Details</a>
+                            </td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } %>
+
+                <div class="btn-container" style="margin-top: 20px;">
+                    <a href="<%= orders.length === 0 ? '/shop' : '/' %>" class="site-btn site-btn-enhanced">
+                        <%= orders.length === 0 ? 'CONTINUE SHOPPING' : 'BACK TO HOME' %>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../includes/footer') %>
+</body>
+</html>
