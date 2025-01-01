@@ -42,7 +42,7 @@
                                 </thead>
                                 <tbody>
                                     <% let subtotal = 0; %> <!-- Khai báo biến subtotal -->
-                                    <% if (products.length > 0) {  %>
+                                    <% if (products && products.length > 0) {  %>
                                         <% for (let p of products) { 
                                             const totalPrice = p.price * p.quantity;  // Tính tổng tiền cho mỗi món
                                             subtotal += totalPrice;  // Cộng dồn vào subtotal
@@ -60,11 +60,14 @@
                                             <td class="quantity__item">
                                                 <div class="quantity">
                                                     <div class="pro-qty-2">
-                                                        <input type="text" value="<%= p.quantity %>">
+                                                        <input type="number" class="quantity-input" data-price="<%= p.price %>" data-id="<%= p._id %>" value="<%= p.quantity %>" min="0">
                                                     </div>
                                                 </div>
+                                                    <!-- Thêm input ẩn để truyền quantity -->
+                                                <input type="hidden" name="items[<%= p._id %>][id]" value="<%= p._id %>">
+                                                <input type="hidden" name="items[<%= p._id %>][quantity]" value="<%= p.quantity %>">
                                             </td>
-                                            <td class="cart__price">
+                                            <td class="cart__price" id="total-<%= p._id %>">
                                                 <%= new Intl.NumberFormat('vi-VN').format((p.price * p.quantity) * 1000) %> ₫
                                             </td>
                                             
@@ -75,10 +78,7 @@
                                                         <i class="fa fa-close"></i>
                                                     </button>
                                                 </form>
-                                                
-                                                
                                             </td>
-                                            
                                         </tr>
                                         <% }; %>
                                     <% } else { %>
@@ -97,9 +97,21 @@
                                     <a href="/shop">Continue Shopping</a>
                                 </div>
                             </div>
+                            
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="continue__btn update__btn">
-                                    <a href="/shopping-cart/update-cart"><i class="fa fa-spinner"></i> Update cart</a>
+                                    <!-- Thay <a> thành <button> -->
+                                    <button type="submit" style="
+                                        background-color: #000000; 
+                                        color: #ffffff; 
+                                        padding: 10px 20px; 
+                                        border: 1px solid #ddd; 
+                                        border-radius: 4px; 
+                                        text-transform: uppercase; 
+                                        font-weight: 600; 
+                                        cursor: pointer;">
+                                        <i class="fa fa-spinner"></i> Update cart
+                                    </button>
                                 </div>
                             </div>
                             
@@ -132,6 +144,108 @@
     </form>
     <!-- Shopping Cart Section End -->
     <%- include('../includes/footer') %>
+    <script>
+                // Lắng nghe sự kiện thay đổi số lượng
+        // Lắng nghe sự kiện thay đổi số lượng (khi người dùng nhập vào input)
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('input', function () {
+            const productId = this.dataset.id; // Lấy ID sản phẩm
+            let newQuantity = parseInt(this.value); // Lấy số lượng mới từ input
+
+            // Kiểm tra nếu số lượng hợp lệ
+            if (newQuantity <= 0) {
+                newQuantity = 1; // Đảm bảo số lượng không nhỏ hơn 1
+                this.value = newQuantity; // Cập nhật lại giá trị trong input
+            }
+
+            const productPrice = parseFloat(this.dataset.price); // Lấy giá sản phẩm từ data-price
+
+            const newTotal = newQuantity * productPrice; // Tính tổng mới cho sản phẩm
+
+            // Cập nhật giá tiền cho sản phẩm
+            const totalElement = document.getElementById(`total-${productId}`);
+            if (totalElement) {
+                totalElement.textContent = new Intl.NumberFormat('vi-VN').format(newTotal * 1000) + ' ₫';
+            }
+
+            // Cập nhật Subtotal cho giỏ hàng
+            updateSubtotal();
+        });
+    });
+
+// // Lắng nghe sự kiện click trên các nút tăng và giảm
+// document.querySelectorAll('.qtybtn').forEach(button => {
+//     button.addEventListener('click', function() {
+//         const input = this.closest('tr').querySelector('.quantity-input');  // Tìm input quantity trong cùng một dòng
+//         let currentQuantity = parseInt(input.value); // Lấy số lượng hiện tại
+//         console.log("currentQuantity before change:", currentQuantity);
+
+//         // Kiểm tra nếu là nút tăng (fa-angle-right) hay nút giảm (fa-angle-left)
+//         if (this.classList.contains('fa-angle-right')) {
+//             currentQuantity += 1; // Tăng số lượng
+//         } else if (this.classList.contains('fa-angle-left')) {
+//             if (currentQuantity > 1) currentQuantity--; 
+//         }
+
+//         console.log("currentQuantity after change:", currentQuantity);
+//         input.value = currentQuantity;
+//         console.log("input.value after change:", input.value);
+
+//         // Tính lại tổng tiền cho sản phẩm
+//         const productPrice = parseFloat(input.dataset.price);
+//         const productId = input.dataset.id;
+//         const newTotal = currentQuantity * productPrice;
+
+//         // Cập nhật tổng tiền cho sản phẩm
+//         const totalElement = document.getElementById(`total-${productId}`);
+//         if (totalElement) {
+//             totalElement.textContent = new Intl.NumberFormat('vi-VN').format(newTotal * 1000) + ' ₫';
+//         }
+
+//         // Cập nhật lại Subtotal
+//         updateSubtotal();
+//     });
+// });
+
+
+// Cập nhật Subtotal
+function updateSubtotal() {
+    let subtotal = 0;
+
+    // Lặp qua tất cả các sản phẩm để tính subtotal
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        const quantity = parseInt(input.value);
+        const price = parseFloat(input.dataset.price);
+        subtotal += quantity * price;
+    });
+
+    // Cập nhật Subtotal hiển thị
+    document.querySelectorAll('.cart__total li span').forEach(subtotalElement => {
+        subtotalElement.textContent = new Intl.NumberFormat('vi-VN').format(subtotal * 1000) + ' ₫';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Lắng nghe sự kiện input thay đổi giá trị số lượng
+    const quantityInputs = document.querySelectorAll('.quantity-input');
+    
+    quantityInputs.forEach(function(input) {
+        input.addEventListener('input', function () {
+            const productId = input.getAttribute('data-id'); // Lấy productId từ data-id
+            const newQuantity = input.value; // Lấy giá trị mới của số lượng
+            
+            // Tìm trường input hidden tương ứng và cập nhật giá trị của nó
+            const hiddenInput = document.querySelector(`.quantity-hidden[data-id="${productId}"]`);
+            if (hiddenInput) {
+                hiddenInput.value = newQuantity;
+            }
+        });
+    });
+});
+
+
+
+    </script>
 </body>
 
 </html>

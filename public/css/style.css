@@ -3870,3 +3870,183 @@ ol {
 		height: 250px;
 	}
 }
+
+
+
+
+/*---------------------
+  Preloader*/
+  /* Đảm bảo modal không hiển thị khi trang tải */
+#successModal {
+    display: none; /* Mặc định ẩn modal */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal__content {
+    background: #000; 
+    color: #fff; 
+    padding: 30px; 
+    border-radius: 15px; 
+    text-align: center;
+    width: 400px; 
+    box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2); 
+}
+
+.modal__content h4 {
+    font-size: 1.8rem; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+    color: #4caf50; 
+}
+
+.modal__content p {
+    font-size: 1.2rem; 
+    margin-bottom: 20px;
+    color: #fff; 
+}
+
+.loading-bar {
+    width: 100%;
+    height: 10px;
+    background: #444; 
+    margin-top: 20px;
+    border-radius: 5px; 
+    overflow: hidden;
+    position: relative;
+}
+
+.loading-bar__progress {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #81c784); 
+    transition: width 2s ease-in-out; 
+}
+
+
+
+/* order ne */
+
+.order-history .order-card {
+	margin-bottom: 30px;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background-color: #f9f9f9;
+}
+
+.order-history .order-card h4 {
+	margin-bottom: 15px;
+}
+
+.order-history .order-card .order-summary {
+	width: 100%;
+	margin-top: 10px;
+	border-collapse: collapse;
+}
+
+.order-history .order-card .order-summary th,
+.order-history .order-card .order-summary td {
+	padding: 10px;
+	text-align: left;
+	border: 1px solid #ddd;
+}
+
+.order-history .order-img {
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+.order-history .total {
+	margin-top: 15px;
+	font-size: 1.2rem;
+	color: #333;
+	text-align: right;
+}
+
+.order-history hr {
+	border: none;
+	border-top: 1px dashed #ccc;
+	margin: 40px 0;
+}
+
+.order-history .btn {
+	margin-top: 20px;
+	display: block;
+	text-align: center;
+}
+
+
+.btn-container {
+    display: flex; /* Kích hoạt flexbox */
+    justify-content: center; /* Căn giữa ngang */
+    align-items: center; /* Căn giữa dọc */
+    margin-bottom: 10px;
+    text-align: center; /* Dự phòng cho các nội dung text */
+}
+
+.site-btn-enhanced {
+    border-radius: 10px; /* Bo góc mềm mại */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    transition: all 0.3s ease-in-out; /* Hiệu ứng mượt */
+}
+
+.site-btn-enhanced:hover {
+    background: #333333; /* Thay đổi màu nền khi hover */
+    transform: translateY(-3px); /* Dịch chuyển nhẹ lên trên khi hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm hơn */
+}
+
+
+.order-summary-table {
+	margin: 0 auto; /* Căn giữa bảng */
+	width: 80%;
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+}
+
+/* Chỉ căn giữa tiêu đề bảng */
+.order-summary-table thead th {
+	text-align: center;
+	background-color: #f9f9f9; /* Màu nền tiêu đề bảng */
+	padding: 10px;
+}
+
+.order-summary-table tbody td {
+	text-align: left; /* Căn trái nội dung trong bảng */
+	padding: 10px;
+}
+
+/* Thêm đường viền */
+.order-summary-table th, .order-summary-table td {
+	border: 1px solid #ddd;
+}
+
+.site-btn-details {
+	padding: 5px 15px;
+	color: #fff;
+	background-color: #007bff;
+	text-decoration: none;
+	border-radius: 5px;
+}

@@ -38,7 +38,7 @@ exports.getEditProduct = (req, res, next) => {
             path: '/manage-products',
           });
         }
-        console.log("Product found:", product);  // Kiểm tra thông tin sản phẩm
+        // console.log("Product found:", product);  // Kiểm tra thông tin sản phẩm
         res.render('admin/edit-product', {
           product: product,
           path: `/manage-products/${product._id}`,

@@ -207,7 +207,3 @@
 
 })(jQuery);
 
-
-function submitForm() {
-    document.getElementById('addToCartForm').submit();  // Gửi form khi nhấn vào thẻ <a>
-}
