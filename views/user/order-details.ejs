@@ -1,0 +1,78 @@
+<%- include('../includes/header') %>
+<title>Order Details</title>
+</head>
+<body>
+<%- include('../includes/navigation') %>
+
+<!-- Breadcrumb Section -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Your orders</h4>
+                    <div class="breadcrumb__links">
+                        <a href="/">Home</a>
+                        <a href="/shop">Shop</a>
+                        <a href="/order">Your orders</a>
+                        <span>Order Details</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Order Details Section -->
+<section class="order-history" style="margin-top: 20px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="order-card">
+                    <h4>Order ID: <%= order._id %></h4>
+                    <p><strong>Date: </strong> <%= String(order.createdAt).replace(" ", ", ") %></p>
+                    <p><strong>Order Status: </strong><%= order.status %></p>
+                    <h5>Items:</h5>
+                    <table class="order-summary">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Title</th>
+                                <th>Quantity</th>
+                                <th>Price (₫)</th>
+                                <th>Total (₫)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%  let totalPrice = 0;
+                                order.items.forEach(item => { 
+                                totalPrice += item.price * item.quantity;
+                                %>
+                                <tr>
+                                    <td>
+                                        <img src="<%= item.imgUrl %>" alt="<%= item.title %>" class="order-img" style="width: 90px; height: 90px; object-fit: cover;">
+                                    </td>
+                                    <td><%= item.title %></td>
+                                    <td><%= item.quantity %></td>
+                                    <td><%= new Intl.NumberFormat('vi-VN').format(item.price * 1000) %></td>
+                                    <td><%= new Intl.NumberFormat('vi-VN').format(item.quantity * item.price * 1000) %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                    <p class="total">Order Total: <strong><%= new Intl.NumberFormat('vi-VN').format(totalPrice * 1000) %> ₫</strong></p>
+                </div>
+                <!-- Back to Orders Button -->
+                <div class="btn-container" style="margin-top: 20px;">
+                    <a href="/order" class="site-btn site-btn-enhanced">
+                        BACK TO ORDERS
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../includes/footer') %>
+</body>
+</html>
