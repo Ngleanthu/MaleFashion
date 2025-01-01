@@ -29,7 +29,6 @@ class User {
             .find()
             .toArray()
             .then(users => {
-                console.log(users);
                 return users;
             })
             .catch(err => {
@@ -43,7 +42,6 @@ class User {
                     .find({ _id : new mongodb.ObjectId(userId)})
                     .next()
                     .then(user => {
-                        
                         return user;
                     })
                     .catch(err => {
@@ -80,7 +78,11 @@ class User {
         }
     
         const cartProductIndex = this.cart.items.findIndex(cp => {
-            return cp.productId.toString() === product._id.toString();
+            // Kiểm tra cp.productId và product._id có tồn tại không trước khi gọi toString()
+            if (cp.productId && product._id) {
+                return cp.productId.toString() === product._id.toString();
+            }
+            return false;
         });
     
         let newQuantity = 1;
@@ -100,7 +102,7 @@ class User {
             .updateOne({ _id: new mongodb.ObjectId(this._id) },
                 { $set: { cart: updatedCart } })
             .then(() => {
-                console.log('Updated Cart');
+                // console.log('Updated Cart');
             })
             .catch(err => console.log(err));
     }
@@ -115,11 +117,80 @@ class User {
                 { _id: new mongodb.ObjectId(this._id) },
                 { $set: { cart: {items: updatedCartItems }} })
             .then(() => {
-                console.log('Updated Cart');
+                // console.log('Updated Cart');
             })
             .catch(err => console.log(err));
     }
     
+    updateCartItem(productId, quantity) {
+        const updatedCartItems = [...this.cart.items]; // Tạo bản sao danh sách items hiện tại
+        const cartItemIndex = updatedCartItems.findIndex(item => 
+            item.productId.toString() === productId.toString()
+        );
+    
+        if (cartItemIndex >= 0) {
+            // Nếu sản phẩm đã tồn tại trong giỏ hàng, cập nhật số lượng
+            updatedCartItems[cartItemIndex].quantity = quantity;
+        } else {
+            // Nếu sản phẩm chưa có trong giỏ hàng, thêm sản phẩm mới
+            updatedCartItems.push({
+                productId: new mongodb.ObjectId(productId),
+                quantity: quantity
+            });
+        }
+    
+        // Lưu lại giỏ hàng đã cập nhật
+        const db = getDb();
+        return db.collection('users')
+            .updateOne(
+                { _id: new mongodb.ObjectId(this._id) },
+                { $set: { cart: { items: updatedCartItems } } }
+            )
+            .then(() => {
+                // console.log('Cart updated successfully');
+            })
+            .catch(err => console.log(err));
+    }
+    
+    
+    addOrder(){
+        const db = getDb();
+        return this.getCart().then(products => {
+            const order = {
+                items: products,
+                user: {
+                    _id: new mongodb.ObjectId(this._id),
+                    fullname: this.fullname,
+                    email: this.email
+                },
+                createdAt: (new Date()).toLocaleString('vi-VN'),
+                status: "Đang xác nhận"
+            }
+            return db.collection('orders')
+                .insertOne(order)
+        }).then(result => {
+                this.cart = {items: []};
+                return db
+                    .collection('users')
+                    .updateOne(
+                        { _id: new mongodb.ObjectId(this._id) },
+                        { $set: { cart: { items: [] } } } 
+                    );
+            })
+            .catch(err => console.log(err));
+    }
+
+    getOrderDetails(orderId) {
+        const db = getDb();
+        return db.collection('orders').findOne({'_id': new mongodb.ObjectId(orderId), 'user._id': new mongodb.ObjectId(this._id)});
+    }
+    
+
+    getOrders() {
+        const db = getDb();
+        return db.collection('orders').find({'user._id': new mongodb.ObjectId(this._id)}).toArray();
+      }
+      
 }
 
 module.exports = User;
