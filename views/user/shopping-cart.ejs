@@ -34,6 +34,20 @@
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% let subtotal = 0; %> <!-- Khai báo biến subtotal -->
+                                    <% if (products.length > 0) {  %>
+                                        <% for (let p of products) { 
+                                            const totalPrice = p.price * p.quantity;  // Tính tổng tiền cho mỗi món
+                                            subtotal += totalPrice;  // Cộng dồn vào subtotal
+                                        %>
+                                        <tr>
                                         <td class="product__cart__item">
                                             <div class="product__cart__item__pic">
                                                 <img src="<%= p.imgUrl %>" alt="" style="width: 90px; height: 90px; object-fit: cover;">
@@ -61,17 +75,7 @@
                                                 <button type="submit" style="border: none; background: transparent; cursor: pointer;">
                                                     <i class="fa fa-close"></i>
                                                 </button>
-                                            </form>
-                                            <td class="cart__close">
-                                                <form action="/shopping-cart/<%= p._id %>" method="POST" style="display:inline;">
-                                                    <input type="hidden" name="productId" value="<%= p._id %>"> <!-- Đây là phần thêm productId vào body -->
-                                                    <button type="submit" style="border: none; background: transparent; cursor: pointer;">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                </form>
-                                                
-                                                
-                                            </td>
+                                            </form>                                        
                                             
                                         </tr>
                                         <% }; %>
