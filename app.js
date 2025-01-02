@@ -41,8 +41,6 @@ app.get('/forgotpassword', (req, res) => res.render('user/forgotpassword', { pat
 app.get('/about', (req, res) => res.render('user/about', { path: '/about' }));
 app.get('/blog', (req, res) => res.render('user/blog', { path: '/blog' }));
 app.get('/blog-details', (req, res) => res.render('user/blog-details', { path: '/blog-details' }));
-
-app.get('/checkout', (req, res) => res.render('user/checkout', { path: '/checkout' }));
 app.get('/contact', (req, res) => res.render('user/contact', { path: '/contact' }));
 // app.get('/shopping-cart', (req, res) => res.render('user/shopping-cart', { path: '/shopping-cart' }));
 // Start the server after database connection
