@@ -8,7 +8,7 @@
   },
   "author": "ngleanthu",
   "license": "ISC",
-  "description": "The MaleFashion project is a web application designed to showcase and manage a fashion store. The project includes functionalities for product management and user interactions, such as viewing products and adding new items.",
+  "description": "## Overview The MaleFashion project is a web application designed to showcase and manage a fashion store. The project includes functionalities for product management and user interactions, such as viewing products and adding new items.",
   "devDependencies": {
     "nodemon": "^3.1.9"
   },
