@@ -1,10 +1,30 @@
 const Product = require('../models/products');
 
 exports.postAddProducts = (req, res, next) => {
-    const { title, imgUrl, description, price, color, category, size, brand, tags, amount } = req.body;
-    const product = new Product(title, imgUrl, description, price, color, category, size, brand, tags, amount, null, req.user._id);
-    product
-        .save()
+    const title = req.body.title;
+    const imgUrl = req.body.imgUrl;
+    const description = req.body.description;
+    const price = req.body.price;
+    const color = req.body.color;
+    const category = req.body.category;
+    const size = req.body.size;
+    const brand = req.body.brand;
+    const tags = req.body.tags;
+    const amount = req.body.amount;    
+    const product = new Product({
+        title: title,
+        imgUrl: imgUrl,
+        description: description,
+        price: price,
+        color: color,
+        category: category,
+        size: size,
+        brand: brand,
+        tags: tags,
+        amount: amount,
+        userId: req.user
+    })
+    product.save()
         .then(result => {
             console.log('Product saved!');
             res.redirect('/manage-products');
@@ -15,7 +35,7 @@ exports.postAddProducts = (req, res, next) => {
 };
 
 exports.getAllProducts = (req, res, next) => {
-    Product.fetchAll()  // Sử dụng phương thức fetchAll trong model Product
+    Product.find()  // Sử dụng phương thức fetchAll trong model Product
         .then(products => {
             res.render('admin/manage-products', {
                 prods: products,
@@ -84,7 +104,7 @@ exports.postEditProduct = async (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
     const productId = req.params.id; // Sử dụng id làm tham số
-    Product.deleteById(productId)
+    Product.findByIdAndDelete(productId)
         .then( ()=> {
             console.log('Destroyed product');
             res.redirect('/manage-products');
