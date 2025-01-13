@@ -13,5 +13,6 @@ router.get('/checkout', productController.getCheckoutProduct);
 router.post('/create-order', productController.postOrder);
 router.get('/order', productController.getOrder);
 router.get('/order/:orderId', productController.getOrderDetails);
+router.get('/filter', productController.filterProducts);
 
 module.exports = router;
