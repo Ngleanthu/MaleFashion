@@ -202,9 +202,7 @@
                                             <button type="submit" class="add-cart">+ Add To Cart</button>
                                             <input type="hidden" name="productId" value="<%= product._id %>">
                                         </form>
-                                        <!-- Modal Success -->
-    
-                                        
+                                        <!-- Modal Success --> 
                                         
                                         <div class="rating">
                                             <i class="fa fa-star-o"></i>
@@ -213,10 +211,10 @@
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>
                                         </div>
-                                        <h5><%= product.price %> ₫</h5>
+                                        <h5><%= new Intl.NumberFormat('vi-VN').format(product.price * 1000) %> ₫</h5>
                                     </div>
                                 </div>
-                            </div>
+                            </div>  
                             <% } %>
                         <% } else { %>
                             <h1>No Products Found!</h1>

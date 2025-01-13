@@ -124,11 +124,11 @@
                                 <% if (products.length > 0) {  %>
                                     <ul class="checkout__total__products">
                                         <% for (let p of products) { 
-                                            const totalPrice = p.price * p.quantity;  // Tính tổng tiền cho mỗi món
+                                            const totalPrice = p.productId.price * p.quantity;  // Tính tổng tiền cho mỗi món
                                             subtotal += totalPrice;  // Cộng dồn vào subtotal
                                         %>
                                             <li>
-                                                <%= p.title %> <span><%= new Intl.NumberFormat('vi-VN').format(totalPrice* 1000) %> ₫</span> <!-- Hiển thị tiêu đề sản phẩm và tổng tiền của sản phẩm -->
+                                                <%= p.productId.title %> <span><%= new Intl.NumberFormat('vi-VN').format(totalPrice* 1000) %> ₫</span> <!-- Hiển thị tiêu đề sản phẩm và tổng tiền của sản phẩm -->
                                             </li>
                                         <% } %>
                                     </ul>

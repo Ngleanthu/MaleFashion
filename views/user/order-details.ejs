@@ -42,20 +42,20 @@
                                 <th>Price (₫)</th>
                                 <th>Total (₫)</th>
                             </tr>
-                        </thead>
+                        </thead>    
                         <tbody>
                             <%  let totalPrice = 0;
-                                order.items.forEach(item => { 
-                                totalPrice += item.price * item.quantity;
+                                order.products.forEach(item => { 
+                                totalPrice += item.product.price * item.quantity;
                                 %>
                                 <tr>
                                     <td>
-                                        <img src="<%= item.imgUrl %>" alt="<%= item.title %>" class="order-img" style="width: 90px; height: 90px; object-fit: cover;">
+                                        <img src="<%= item.product.imgUrl %>" alt="<%= item.product.title %>" class="order-img" style="width: 90px; height: 90px; object-fit: cover;">
                                     </td>
-                                    <td><%= item.title %></td>
+                                    <td><%= item.product.title %></td>
                                     <td><%= item.quantity %></td>
-                                    <td><%= new Intl.NumberFormat('vi-VN').format(item.price * 1000) %></td>
-                                    <td><%= new Intl.NumberFormat('vi-VN').format(item.quantity * item.price * 1000) %></td>
+                                    <td><%= new Intl.NumberFormat('vi-VN').format(item.product.price * 1000) %></td>
+                                    <td><%= new Intl.NumberFormat('vi-VN').format(item.quantity * item.product.price * 1000) %></td>
                                 </tr>
                             <% }); %>
                         </tbody>
