@@ -40,6 +40,7 @@ exports.getAllProducts = (req, res, next) => {
     Product.find()  // Sử dụng phương thức fetchAll trong model Product
         .then(products => {
             res.render('admin/manage-products', {
+                isAuthenticated: req.session.isLoggedIn
                 prods: products.slice((page - 1) * limit, page * limit),
                 path: '/manage-products',  // Truyền biến 'path' vào view
                 currentPage: page, // Trang hiện tại
@@ -68,6 +69,7 @@ exports.getEditProduct = (req, res, next) => {
         res.render('admin/edit-product', {
           product: product,
           path: `/manage-products/${product._id}`,
+          isAuthenticated: req.session.isLoggedIn
         });
       })
       .catch(err => {

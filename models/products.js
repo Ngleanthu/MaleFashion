@@ -12,7 +12,7 @@ const productSchema = new mongoose.Schema({
     brand: { type: String, required: false },
     tags: { type: [String], required: false },
     amount: { type: Number, required: true },
-    status: { type: Number, required: false },
+    status: { type: Number, required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 

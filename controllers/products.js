@@ -7,6 +7,7 @@ exports.getAllProducts = (req, res, next) => {
     Product.find()
         .then((products) => {
             res.render("user/shop", {
+                isAuthenticated: req.session.isLoggedIn
                 prods: products.slice((page - 1) * limit, page * limit), // Danh sách sản phẩm
                 path: "/shop", // Đường dẫn
                 currentPage: page, // Trang hiện tại
@@ -35,6 +36,7 @@ exports.getProduct = (req, res, next) => {
             res.render("user/shop-details", {
                 product: product,
                 path: `/shop/${product._id}`,
+                isAuthenticated: req.session.isLoggedIn
             });
         })
         .catch((err) => {
@@ -51,6 +53,7 @@ exports.getIndex = (req, res, next) => {
         res.render("user/shop", {
             prods: products,
             path: "/shop",
+            isAuthenticated: req.session.isLoggedIn
         });
     });
 };
@@ -77,6 +80,7 @@ exports.getCart = (req, res, next) => {
             res.render("user/shopping-cart", {
                 path: "/shopping-cart",
                 products: products,
+                isAuthenticated: req.session.isLoggedIn
             });
         })
         .catch((err) => {
@@ -105,6 +109,7 @@ exports.getCheckoutProduct = (req, res, next) => {
             res.render("user/checkout", {
                 path: "/checkout",
                 products: products,
+                isAuthenticated: req.session.isLoggedIn
             });
         })
         .catch((err) => {
@@ -131,7 +136,7 @@ exports.postCartUpdate = (req, res, next) => {
             if (item.quantity > 0) {
                 // Cập nhật số lượng sản phẩm
                 console.log("Cập nhật sản phẩm");
-                // return req.user.updateCartItem(item.id, item.quantity);
+                // return req.session.user.updateCartItem(item.id, item.quantity);
             } else {
                 // Xóa sản phẩm khỏi giỏ hàng
                 console.log("Xóa sản phẩm");
@@ -186,7 +191,8 @@ exports.getOrder = (req, res, next) => {
             res.render("user/order", {
                 path: "/order",
                 orders: orders,
-                user: req.user 
+                user: req.user ,
+                isAuthenticated: req.session.isLoggedIn
             });
         })
         .catch((err) => {
@@ -206,6 +212,7 @@ exports.getOrderDetails = (req, res, next) => {
                 user: req.user,
                 order: order,
                 path: `/order/${order._id}`,
+                isAuthenticated: req.session.isLoggedIn
             });
         })
         .catch((err) => {
