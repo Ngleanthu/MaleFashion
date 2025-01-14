@@ -4,6 +4,23 @@ const Order = require('../models/order');
 exports.dashboard = (req, res, next) => {
     res.render('admin/dashboard', {path: 'admin/dashboard'});
 }
+exports.getAllUsers = (req, res, next) => {
+    User.find()
+    .then(users => {
+        res.render('admin/manage-users', {
+            isAuthenticated: req.session.isLoggedIn,
+            users: users,
+            path: '/manage-users',  // Truyền biến 'path' vào view
+            
+            
+        });
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).send('Error fetching users');
+    });
+};
+
 exports.postAddProducts = (req, res, next) => {
     const title = req.body.title;
     const imgUrl = req.body.imgUrl;
@@ -74,6 +91,7 @@ exports.getAllProducts = (req, res, next) => {
             res.status(500).send('Error fetching products');
         });
 };
+
 exports.getEditProduct = (req, res, next) => {
     const productId = req.params.id; // Sử dụng id làm tham số
     Product.findById(productId)
