@@ -1,12 +1,19 @@
 const Product = require("../models/products");
 const Order = require("../models/order");
 exports.getAllProducts = (req, res, next) => {
+    let page = req.query.page ? req.query.page : 1;
+    let limit = 2; 
+
     Product.find()
         .then((products) => {
             res.render("user/shop", {
-                prods: products,
-                path: "/shop",
                 isAuthenticated: req.session.isLoggedIn
+                prods: products.slice((page - 1) * limit, page * limit), // Danh sách sản phẩm
+                path: "/shop", // Đường dẫn
+                currentPage: page, // Trang hiện tại
+                totalProducts: products.length, // Tổng số sản phẩm
+                totalPages: Math.ceil(products.length / limit), // Tổng số trang (2 sản phẩm/trang)
+                limit: limit, // Số lượng sản phẩm mỗi trang
             });
         })
         .catch((err) => {
@@ -50,6 +57,7 @@ exports.getIndex = (req, res, next) => {
         });
     });
 };
+
 exports.postCart = (req, res, next) => {
     const prodId = req.body.productId;
     Product.findById(prodId)
@@ -211,4 +219,96 @@ exports.getOrderDetails = (req, res, next) => {
             console.log(err);
             res.redirect("user/order");
         });
+};
+
+
+exports.filterProducts = async (req, res) => {
+    const ensureArray = (value) => value ? (Array.isArray(value) ? value : value.split(',')) : [];
+    try {
+        const queryConditions = [];
+
+        // Lọc theo các thuộc tính
+        if (req.query.category) {
+            queryConditions.push({ category: { $in: ensureArray(req.query.category) } });
+        }
+
+        if (req.query.brand) {
+            queryConditions.push({ brand: { $in: ensureArray(req.query.brand) } });
+        }
+
+        if (req.query.size) {
+            queryConditions.push({ size: { $in: ensureArray(req.query.size) } });
+        }
+
+        if (req.query.color) {
+            queryConditions.push({ color: { $in: ensureArray(req.query.color) } });
+        }
+
+        if (req.query.tags) {
+            queryConditions.push({ tags: { $all: ensureArray(req.query.tags) } });
+        }
+
+        // Lọc theo giá
+        if (req.query.min || req.query.max) {
+            const priceFilter = {};
+            if (req.query.min) priceFilter.$gte = parseFloat(req.query.min) || 0;
+            if (req.query.max) priceFilter.$lte = parseFloat(req.query.max);
+            if (Object.keys(priceFilter).length > 0) {
+                queryConditions.push({ price: priceFilter });
+            }
+        }
+
+        // Tìm kiếm
+        if (req.query.search) {
+            queryConditions.push({ title: { $regex: req.query.search, $options: 'i' } });
+        }
+
+        // Tạo điều kiện lọc cuối cùng
+        const finalQuery = queryConditions.length > 0 ? { $and: queryConditions } : {};
+
+        // Tạo truy vấn
+        let query = Product.find(finalQuery);
+        const totalProducts = await Product.countDocuments(finalQuery);
+
+        // Sắp xếp
+        if (req.query.sort) {
+            if (req.query.sort === 'DESC') {
+                query = query.sort({ price: -1 });
+            } else if (req.query.sort === 'ASC') {
+                query = query.sort({ price: 1 });
+            }
+        }
+
+        // Phân trang
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.max(1, parseInt(req.query.limit) || 2);
+        const skip = (page - 1) * limit;
+
+        query = query.skip(skip).limit(limit);
+
+        // Lấy sản phẩm và tổng số sản phẩm
+        const [products] = await Promise.all([
+            query
+        ]);
+
+        // Trả kết quả
+        res.render("user/shop", {
+            prods: products,
+            path: "/shop",
+            currentPage: page,
+            totalProducts: totalProducts,
+            totalPages: Math.ceil(totalProducts / limit),
+            limit: limit,
+        });
+
+    } catch (err) {
+        console.error("Error filtering products:", {
+            error: err.message,
+            stack: err.stack,
+        });
+        res.status(500).json({
+            success: false,
+            message: "Đã xảy ra lỗi khi lọc sản phẩm.",
+        });
+    }
 };

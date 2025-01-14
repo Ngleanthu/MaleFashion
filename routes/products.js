@@ -1,5 +1,6 @@
 const express = require('express');
 const productController = require('../controllers/products');
+const adminController = require('../controllers/admin');
 const router = express.Router();
 
 
@@ -13,5 +14,9 @@ router.get('/checkout', productController.getCheckoutProduct);
 router.post('/create-order', productController.postOrder);
 router.get('/order', productController.getOrder);
 router.get('/order/:orderId', productController.getOrderDetails);
+router.get('/filter', productController.filterProducts);
+
+
+router.get('/admin/filter', adminController.filterProducts);
 
 module.exports = router;
