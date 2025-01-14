@@ -7,7 +7,7 @@ exports.getAllProducts = (req, res, next) => {
     Product.find()
         .then((products) => {
             res.render("user/shop", {
-                isAuthenticated: req.session.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn,
                 prods: products.slice((page - 1) * limit, page * limit), // Danh sách sản phẩm
                 path: "/shop", // Đường dẫn
                 currentPage: page, // Trang hiện tại

@@ -60,12 +60,12 @@
     let revenueChart, topProductsChart;
 
     async function fetchRevenueData(range) {
-        const response = await fetch(`/dashboard/revenue-report?range=${range}`);
+        const response = await fetch(`/admin/dashboard/revenue-report?range=${range}`);
         return response.json();
     }
 
     async function fetchTopProducts(range) {
-        const response = await fetch(`/dashboard/top-products?range=${range}`);
+        const response = await fetch(`/admin/dashboard/top-products?range=${range}`);
         return response.json();
     }
 

@@ -53,8 +53,7 @@ exports.postSignUp = (req, res, next) => {
             return user.save();
         })
         .catch(err => console.log(err));
-    })
-        
+    })   
     .catch(err => {
         console.log(err);
         res.redirect('/signup');

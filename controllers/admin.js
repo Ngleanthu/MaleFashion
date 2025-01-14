@@ -1,11 +1,13 @@
 const Product = require('../models/products');
 const User = require('../models/user');
 const Order = require('../models/order');
-
+exports.dashboard = (req, res, next) => {
+    res.render('admin/dashboard', {path: 'admin/dashboard'});
+}
 exports.postAddProducts = (req, res, next) => {
     const title = req.body.title;
     const imgUrl = req.body.imgUrl;
-    const description = req.body.description;
+    const description = req.bodyx.description;
     const price = req.body.price;
     const color = req.body.color;
     const category = req.body.category;
@@ -35,14 +37,30 @@ exports.postAddProducts = (req, res, next) => {
             console.error(err);
         });
 };
+exports.getAllUsers = (req, res, next) => {
 
+    User.find()
+        .then(users => {
+            res.render('admin/manage-users', {
+                isAuthenticated: req.session.isLoggedIn,
+                users: users,
+                path: '/manage-users',  // Truyền biến 'path' vào view
+                
+                
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error fetching users');
+        });
+};
 exports.getAllProducts = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
     let limit = 2; 
     Product.find()  // Sử dụng phương thức fetchAll trong model Product
         .then(products => {
             res.render('admin/manage-products', {
-                isAuthenticated: req.session.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn,
                 prods: products.slice((page - 1) * limit, page * limit),
                 path: '/manage-products',  // Truyền biến 'path' vào view
                 currentPage: page, // Trang hiện tại
@@ -104,7 +122,7 @@ exports.postEditProduct = async (req, res, next) => {
         if (!product) {
             return res.status(404).send('Product not found');
         }
-        res.redirect('/manage-products'); // Sau khi cập nhật xong, điều hướng về trang quản lý sản phẩm
+        res.redirect('/admin/manage-products'); // Sau khi cập nhật xong, điều hướng về trang quản lý sản phẩm
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -116,7 +134,7 @@ exports.postDeleteProduct = (req, res, next) => {
     Product.findByIdAndDelete(productId)
         .then( ()=> {
             console.log('Destroyed product');
-            res.redirect('/manage-products');
+            res.redirect('/admin/manage-products');
         })
         .catch(err => {
             console.log(err);
@@ -175,7 +193,7 @@ exports.filterProducts = async (req, res) => {
         // Trả kết quả
         res.render("admin/manage-products", {
             prods: products,
-            path: "/manage-products",
+            path: "admin/manage-products",
             currentPage: page,
             totalProducts: totalProducts,
             totalPages: Math.ceil(totalProducts / limit),
@@ -207,7 +225,7 @@ exports.getDashboardStats = async (req, res) => {
         }, 0);
         
         res.render('admin/dashboard', {
-            path: '/dashboard',
+            path: 'admin/dashboard',
             totalUsers,
             totalOrders,
             totalRevenue,
