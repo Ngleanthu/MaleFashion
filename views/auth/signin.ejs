@@ -21,7 +21,17 @@
     </div>
 </section>
 <!-- Breadcrumb Section End -->
-
+<!-- Flash Messages Section Begin -->
+<% if (errorMessages.length > 0) { %>
+    <div class="alert alert-danger">
+        <ul>
+            <% errorMessages.forEach(function(msg) { %>
+                <li><%= msg %></li>
+            <% }) %>
+        </ul>
+    </div>
+<% } %>
+<!-- Flash Messages Section End -->
 <!-- Sign In Section Begin -->
 <section class="sign-in spad">
     <div class="container">
@@ -30,6 +40,7 @@
                 <div class="sign-in__form">
                     <h3>Welcome Back</h3>
                     <p>Please sign in to your account</p>
+                
                     <form action="/signin" method="POST">
                         <div class="form-group">
                             <label for="email">Email Address</label>

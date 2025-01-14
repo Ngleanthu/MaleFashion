@@ -103,7 +103,7 @@
                                                     <p><strong>Size:</strong> <%= item.product.size %></p>
                                                 </div>
                                                 <div>
-                                                    <p><strong>Price:</strong> ₫<%= new Intl.NumberFormat('vi-VN').format(item.product.price * 1000) %>₫</p>
+                                                    <p><strong>Price:</strong> <%= new Intl.NumberFormat('vi-VN').format(item.product.price * 1000) %>₫</p>
                                                 </div>
                                                 <div>
                                                     <p><strong>Quantity:</strong> <%= item.quantity %></p>

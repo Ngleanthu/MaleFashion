@@ -1,2 +1,10 @@
 MONGO_URI=mongodb+srv://ngleanthu:ngleanthu@cluster0.jxr73.mongodb.net/test?retryWrites=true&w=majority
 SESSION_SECRET=ngleanthu
+
+
+npm i 
+npm install --save-dev nodemon
+npm install --save express
+npm install --save mongodb
+npm install --save mongoose
+npm install --save dotenv

@@ -182,7 +182,7 @@
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Category</th>
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Brand</th>
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Tags</th>
-                    <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Amount</th>
+                    <!-- <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Amount</th> -->
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
                 </tr>
@@ -192,14 +192,14 @@
                     <% prods.forEach(function(product) { %>
                         <tr class="border-b hover:bg-gray-50">
                             <td class="border px-4 py-3"><%= product.title %></td>
-                            <td class="border px-4 py-3">$<%= product.price %></td>
+                            <td class="border px-4 py-3"><%= new Intl.NumberFormat('vi-VN').format(product.price * 1000) %>₫</td>
                             <td class="border px-4 py-3">
                                 <img src="<%= product.imgUrl %>" alt="<%= product.title %>" class="w-16 h-16 rounded object-cover">
                             </td>
                             <td class="border px-4 py-3"><%= product.category %></td>
                             <td class="border px-4 py-3"><%= product.brand %></td>
                             <td class="border px-4 py-3"><%= product.tags %></td>
-                            <td class="border px-4 py-3 text-center"><%= product.amount %></td>
+                            <!-- <td class="border px-4 py-3 text-center"><%= product.amount %></td> -->
                             <td class="border px-4 py-3">
                                 <% if (product.status == 1) { %>
                                     <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">On stock</span>
