@@ -225,6 +225,10 @@ exports.filterProducts = async (req, res) => {
     const ensureArray = (value) => value ? (Array.isArray(value) ? value : value.split(',')) : [];
     try {
         const queryConditions = [];
+        
+        // Extract page and limit from query parameters (with default values)
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
 
         // Lọc theo các thuộc tính
         if (req.query.category) {
@@ -262,44 +266,38 @@ exports.filterProducts = async (req, res) => {
             queryConditions.push({ title: { $regex: req.query.search, $options: 'i' } });
         }
 
-        // Tạo điều kiện lọc cuối cùng
         const finalQuery = queryConditions.length > 0 ? { $and: queryConditions } : {};
-
-        // Tạo truy vấn
-        let query = Product.find(finalQuery);
-        const totalProducts = await Product.countDocuments(finalQuery);
-
-        // Sắp xếp
-        if (req.query.sort) {
-            if (req.query.sort === 'DESC') {
-                query = query.sort({ price: -1 });
-            } else if (req.query.sort === 'ASC') {
-                query = query.sort({ price: 1 });
-            }
-        }
-
-        // Phân trang
-        const page = Math.max(1, parseInt(req.query.page) || 1);
-        const limit = Math.max(1, parseInt(req.query.limit) || 2);
-        const skip = (page - 1) * limit;
-
-        query = query.skip(skip).limit(limit);
-
-        // Lấy sản phẩm và tổng số sản phẩm
-        const [products] = await Promise.all([
-            query
-        ]);
+        
+        // Xử lý sắp xếp
+        const sort = req.query.sort === 'ASC' ? { price: 1 } : { price: -1 };
 
         // Trả kết quả
-        res.render("user/shop", {
-            prods: products,
-            path: "/shop",
-            currentPage: page,
-            totalProducts: totalProducts,
-            totalPages: Math.ceil(totalProducts / limit),
-            limit: limit,
+        Product.find(finalQuery)
+        .sort(sort)  // Sắp xếp toàn bộ dữ liệu trước khi phân trang
+        .skip((page - 1) * limit)  // Phân trang
+        .limit(limit)  // Giới hạn số lượng sản phẩm mỗi trang
+        .then(products => {
+            // Tính tổng số sản phẩm không phân trang để hiển thị đúng tổng
+            Product.countDocuments(finalQuery)  // Đếm số sản phẩm thỏa mãn điều kiện lọc
+                .then(totalProducts => {
+                    res.render("user/shop", {
+                        prods: products,
+                        path: "/shop",
+                        currentPage: page,
+                        totalProducts: totalProducts,  // Tổng số sản phẩm không phân trang
+                        totalPages: Math.ceil(totalProducts / limit),  // Tổng số trang
+                        limit: limit,  // Số lượng sản phẩm mỗi trang
+                    });
+                })
+                .catch(err => {
+                    console.error("Error counting total products:", err);
+                    res.status(500).send('Error counting products');
+                });
+        })
+        .catch(err => {
+            console.error("Error fetching products:", err);
+            res.status(500).send('Error fetching products');
         });
-
     } catch (err) {
         console.error("Error filtering products:", {
             error: err.message,

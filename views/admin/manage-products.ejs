@@ -287,11 +287,7 @@
         
 </div>
 
-<!-- JS Plugins -->
-<!-- <script src="js/addProductbyAdmin.js"></script>
 
-
-<script src="js/filterProductbyAdmin.js"></script> -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     const openModalButton = document.getElementById('openAddProductModal');
@@ -425,11 +421,11 @@ function debounce(func, wait) {
     };
 }
 
+
 function updateUrl(filters) {
     const newUrl = `/admin/filter?${filters}`;
     history.replaceState(null, '', newUrl);
 }
-
 function setBgImages() {
     document.querySelectorAll('.set-bg').forEach(el => {
         const bg = el.getAttribute('data-setbg');

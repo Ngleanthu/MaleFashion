@@ -24,12 +24,18 @@ exports.getOrderDetails = (req, res, next) => {
         });
 };
 exports.getAllOrders = (req, res, next) => {
+    let page = req.query.page ? req.query.page : 1;
+    let limit = 2; 
     Order.find()
     .then(orders => {
         res.render('admin/manage-orders', {
             isAuthenticated: req.session.isLoggedIn,
-            orders: orders,
-            path: '/manage-orders',  // Truyền biến 'path' vào view         
+            orders: orders.slice((page - 1) * limit, page * limit),
+            path: '/manage-orders',  // Truyền biến 'path' vào view       
+            currentPage: page, // Trang hiện tại
+            totalProducts: orders.length, // Tổng số sản phẩm
+            totalPages: Math.ceil(orders.length / limit), // Tổng số trang (2 sản phẩm/trang)
+            limit: limit, // Số lượng sản phẩm mỗi trang  
         });
     })
     .catch(err => {
@@ -44,8 +50,6 @@ exports.getAllUsers = (req, res, next) => {
             isAuthenticated: req.session.isLoggedIn,
             users: users,
             path: '/manage-users',  // Truyền biến 'path' vào view
-            
-            
         });
     })
     .catch(err => {
@@ -87,16 +91,21 @@ exports.postAddProducts = (req, res, next) => {
             console.error(err);
         });
 };
+
 exports.getAllUsers = (req, res, next) => {
+    let page = req.query.page ? req.query.page : 1;
+    let limit = 2; 
 
     User.find()
         .then(users => {
             res.render('admin/manage-users', {
                 isAuthenticated: req.session.isLoggedIn,
-                users: users,
+                users: users.slice((page - 1) * limit, page * limit),
                 path: '/manage-users',  // Truyền biến 'path' vào view
-                
-                
+                currentPage: page, // Trang hiện tại
+                totalProducts: users.length, // Tổng số sản phẩm
+                totalPages: Math.ceil(users.length / limit), // Tổng số trang (2 sản phẩm/trang)
+                limit: limit, // Số lượng sản phẩm mỗi trang
             });
         })
         .catch(err => {
@@ -136,7 +145,6 @@ exports.getEditProduct = (req, res, next) => {
             path: '/manage-products',
           });
         }
-        // console.log("Product found:", product);  // Kiểm tra thông tin sản phẩm
         res.render('admin/edit-product', {
           product: product,
           path: `/manage-products/${product._id}`,
@@ -193,76 +201,76 @@ exports.postDeleteProduct = (req, res, next) => {
         });
 };
 
-exports.filterProducts = async (req, res) => {
-    try {
-        const queryConditions = [];
-    
-        if (req.query.category) {
-            queryConditions.push({ category: req.query.category });
-        }
-    
-        if (req.query.brand) {
-            queryConditions.push({ brand: req.query.brand });
-        }
-    
-        if (req.query.tags) {
-            queryConditions.push({ tags: req.query.tags });
-        }
-    
-        if (req.query.status) {
-            queryConditions.push({ status: req.query.status });
-        }
-    
-        if (req.query.search) {
-            queryConditions.push({ title: { $regex: req.query.search, $options: 'i' } });
-        }
-    
-        const finalQuery = queryConditions.length > 0 ? { $and: queryConditions } : {};    
+exports.filterProducts = (req, res, next) => {
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 2;
+    let category = req.query.category || ''; // Lọc theo danh mục
+    let brand = req.query.brand || ''; // Lọc theo thương hiệu
+    let tags = req.query.tags || ''; // Lọc theo tag
+    let status = req.query.status || ''; // Lọc theo trạng thái (active, inactive)
+    let searchTerm = req.query.search || ''; // Từ khóa tìm kiếm
+    let sortField = req.query.sortField || ''; // Sắp xếp theo trường nào (price, title...)
+    let sortType = req.query.sortType || ''; // Sắp xếp theo thứ tự ASC hoặc DESC
 
-        let query = Product.find(finalQuery);
-        const totalProducts = await Product.countDocuments(finalQuery);
-
-        if (req.query.sort) {
-            if (req.query.sort === 'DESC') {
-                query = query.sort({ price: -1 });
-            } else if (req.query.sort === 'ASC') {
-                query = query.sort({ price: 1 });
-            }
-        }
-
-        // Phân trang
-        const page = Math.max(1, parseInt(req.query.page) || 1);
-        const limit = Math.max(1, parseInt(req.query.limit) || 2);
-        const skip = (page - 1) * limit;
-
-        query = query.skip(skip).limit(limit);
-
-        // Lấy sản phẩm và tổng số sản phẩm
-        const [products] = await Promise.all([
-            query
-        ]);
-
-        // Trả kết quả
-        res.render("admin/manage-products", {
-            prods: products,
-            path: "admin/manage-products",
-            currentPage: page,
-            totalProducts: totalProducts,
-            totalPages: Math.ceil(totalProducts / limit),
-            limit: limit,
-        });
-
-    } catch (err) {
-        console.error("Error filtering products:", {
-            error: err.message,
-            stack: err.stack,
-        });
-        res.status(500).json({
-            success: false,
-            message: "Đã xảy ra lỗi khi lọc sản phẩm.",
-        });
+    // Build search query
+    let query = {};
+    if (searchTerm) {
+        query.title = { $regex: searchTerm, $options: 'i' }; // Tìm kiếm không phân biệt chữ hoa, chữ thường
     }
+    if (category) {
+        query.category = category;
+    }
+    if (brand) {
+        query.brand = brand;
+    }
+    if (tags) {
+        query.tags = tags;
+    }
+    if (status) {
+        query.status = status; // Trạng thái của sản phẩm
+    }
+
+    // Sorting
+    let sort = {};
+    if (sortField) {
+        sort[sortField] = sortType === 'ASC' ? 1 : -1; // Sắp xếp theo thứ tự ASC hoặc DESC
+    }
+
+    Product.find(query)
+        .sort(sort)
+        .skip((page - 1) * limit)  // Bỏ qua số lượng kết quả từ các trang trước
+        .limit(limit)  // Giới hạn số lượng kết quả mỗi trang
+        .then(products => {
+            Product.countDocuments(query)  // Đếm tổng số sản phẩm thỏa mãn filter
+                .then(totalProducts => {
+                    const totalPages = Math.ceil(totalProducts / limit); // Tổng số trang
+                    res.render('admin/manage-products', {  // Trả về view
+                        prods: products,
+                        path: 'admin/manage-products',  // Truyền biến 'path' vào view
+                        currentPage: page, // Trang hiện tại
+                        totalProducts: totalProducts, // Tổng số sản phẩm
+                        totalPages: totalPages, // Tổng số trang
+                        limit: limit, // Số lượng sản phẩm mỗi trang
+                        category: category,
+                        brand: brand,
+                        tags: tags,
+                        status: status,
+                        searchTerm: searchTerm,
+                        sortField: sortField,
+                        sortType: sortType
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).send('Error counting products');
+                });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error fetching products');
+        });
 };
+
 
 exports.getDashboardStats = async (req, res) => {
     try {
@@ -363,4 +371,149 @@ exports.getTopProducts = async (req, res) => {
         console.error(error);
         res.status(500).send('Error fetching top products');
     }
+};
+
+exports.filterAccountByAdmin = (req, res, next) => {
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 2;
+    let searchField = req.query.searchField || ''; // Tìm kiếm theo trường nào (username, email...)
+    let searchTerm = req.query.searchTerm || ''; // Từ khóa tìm kiếm
+    let filterRole = req.query.filterRole || ''; // Lọc theo vai trò
+    let sortField = req.query.sortField || ''; // Sắp xếp theo trường nào (username, email...)
+    let sortType = req.query.sortType || ''; // Sắp xếp theo thứ tự ASC hoặc DESC
+    let filterStatus = req.query.filterStatus || ''; // Lọc theo trạng thái (active, inactive)
+
+    // Build search query
+    let query = {};
+    if (searchField && searchTerm) {
+        query[searchField] = { $regex: searchTerm, $options: 'i' }; // Tìm kiếm không phân biệt chữ hoa, chữ thường
+    }
+    if (filterRole) {
+        query.role = filterRole;
+    }
+    if (filterStatus) {
+        query.status = filterStatus; // Chuyển đổi thành boolean
+    }
+
+    // Sorting
+    let sort = {};
+    if (sortField) {
+        sort[sortField] = sortType === 'ASC' ? 1 : -1; // Sắp xếp theo thứ tự ASC hoặc DESC
+    }
+
+    User.find(query)
+        .sort(sort)
+        .skip((page - 1) * limit)  // Bỏ qua số lượng kết quả từ các trang trước
+        .limit(limit)  // Giới hạn số lượng kết quả mỗi trang
+        .then(users => {
+            User.countDocuments(query)  // Đếm tổng số người dùng thỏa mãn filter
+                .then(totalUsers => {
+                    const totalPages = Math.ceil(totalUsers / limit); // Tổng số trang
+                    res.render('admin/manage-users', {  // Trả về view
+                        isAuthenticated: req.session.isLoggedIn,
+                        users: users,
+                        path: '/manage-users',  // Truyền biến 'path' vào view
+                        currentPage: page, // Trang hiện tại
+                        totalUsers: totalUsers, // Tổng số người dùng
+                        totalPages: totalPages, // Tổng số trang
+                        limit: limit, // Số lượng người dùng mỗi trang
+                        searchField: searchField,
+                        searchTerm: searchTerm,
+                        filterRole: filterRole,
+                        sortField: sortField,
+                        sortType: sortType,
+                        filterStatus: filterStatus
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).send('Error counting users');
+                });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error fetching users');
+        });
+};
+
+exports.updateStatusOrder = async (req, res) => {
+    try {
+      const orderId = req.params.id;
+      const order = await Order.findById(orderId);
+  
+      if (!order) {
+        console.log("order not found");
+        return res.status(404).render('admin/manage-orders', {
+          message: 'Sản phẩm không tồn tại.',
+          path: '/manage-orders',
+        });
+      }
+  
+      let currentStatus = order.status;
+      if (currentStatus === 'Pending') {
+        order.status = 'Shipped';
+      } else if (currentStatus === 'Shipped') {
+        order.status = 'Delivered';
+      } else {
+        return res.status(500).render('admin/manage-orders', {
+          message: 'Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng.',
+          path: '/manage-orders',
+        });
+      }
+  
+      await order.save();
+
+      exports.getAllOrders(req, res);
+  
+    } catch (err) {
+      console.log("Error:", err);
+      res.status(500).render('admin/manage-orders', {
+        message: 'Đã xảy ra lỗi khi tải sản phẩm.',
+        path: '/manage-orders',
+      });
+    }
+};
+  
+exports.filterOrder = (req, res) => {
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 2;
+    let status = req.query.status || '';
+    let date = req.query.date || '';
+
+    let query = {};
+
+    // Lọc theo trạng thái đơn hàng
+    if (status) {
+        query.status = status;
+    }
+
+    Order.find(query)
+        .sort({ createdAt: date == 1 ? 1 : -1 })  // Sắp xếp đơn hàng mới nhất lên đầu
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .then(orders => {
+            Order.countDocuments(query)
+                .then(totalOrders => {
+                    const totalPages = Math.ceil(totalOrders / limit);
+                    res.render('admin/manage-orders', {
+                        isAuthenticated: req.session.isLoggedIn,
+                        orders: orders,
+                        path: '/manage-orders',
+                        currentPage: page,
+                        totalOrders: totalOrders,
+                        totalPages: totalPages,
+                        limit: limit,
+                        status: status,
+                        date: date
+                    });
+                })
+                .catch(err => {
+                    console.error('Error counting orders:', err);
+                    res.status(500).send('Lỗi khi đếm số lượng đơn hàng');
+                });
+        })
+        .catch(err => {
+            console.error('Error fetching orders:', err);
+            res.status(500).send('Lỗi khi tải danh sách đơn hàng');
+        });
 };
