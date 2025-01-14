@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      MONGO_URI: mongodb+srv://ngleanthu:ngleanthu@cluster0.jxr73.mongodb.net/test?retryWrites=true&w=majority
+      SESSION_SECRET: ngleanthu
+      ADMIN_KEY: 38yejdqw$
+
+volumes:
+  mongo-data:
