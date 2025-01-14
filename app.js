@@ -48,6 +48,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req, res, next) => {
+
     // User.findById("678554e7b5dc05401b8a81ed").then(user =>{
     //     res.locals.user = user || null; 
     //     next();

@@ -12,6 +12,7 @@ router.post('/manage-products/delete-product/:id', adminController.postDeletePro
 
 // router.post('/manage-users', adminController.postAllUsers);
 router.get('/manage-users', adminController.getAllUsers);
+router.get('/filterUser', adminController.filterAccountByAdmin);
 
 // order
 router.get('/manage-orders', adminController.getAllOrders);
@@ -22,5 +23,6 @@ router.get('/dashboard/revenue-report', adminController.getRevenueReport);
 router.get('/dashboard/top-products', adminController.getTopProducts);
 router.get('/dashboard', adminController.getDashboardStats);
 router.get('/', adminController.getDashboardStats);
+
 
 module.exports = router;
