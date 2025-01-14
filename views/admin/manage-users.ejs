@@ -1,38 +1,49 @@
 <%- include('admin-main', { title: 'Account Management', body: `
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Quản lý tài khoản</h1>
-    <p class="text-gray-600">Trang quản lý tài khoản người dùng.</p>
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Accounts Management</h1>
+    <p class="text-gray-600">Page for managing accounts in the store.</p>
 
     <!-- Nội dung chính -->
     <div class="mt-4 bg-white shadow-md rounded-lg p-4">
         <table class="min-w-full border">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-2 text-left">Tên người dùng</th>
-                    <th class="px-4 py-2 text-left">Email</th>
-                    <th class="px-4 py-2 text-left">Vai trò</th>
-                    <th class="px-4 py-2 text-left">Hành động</th>
+                    <th class="px-4 py-2 text-left">Username</th>
+                    <th class="px-4 py-2 text-left">Email</th>   
+                    <th class="px-4 py-2 text-left">Role</th>   
+                    <th class="px-4 py-2 text-left">Action</th>
                 </tr>
             </thead>
+    ` }) %>            
             <tbody>
-                <tr>
-                    <td class="border px-4 py-2">Nguyễn Văn A</td>
-                    <td class="border px-4 py-2">nguyenvana@example.com</td>
-                    <td class="border px-4 py-2">User</td>
-                    <td class="border px-4 py-2">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Sửa</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border px-4 py-2">Trần Thị B</td>
-                    <td class="border px-4 py-2">tranthib@example.com</td>
-                    <td class="border px-4 py-2">Admin</td>
-                    <td class="border px-4 py-2">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">Sửa</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Xóa</button>
-                    </td>
-                </tr>
+                <% if (users && users.length > 0) { %> 
+                    <% users.forEach(function(user) { %>
+                        <tr>
+                            <td class="border px-4 py-2"><%= user.username %></td>
+                            <td class="border px-4 py-2"><%= user.email %></td>                                                                           
+                            <td class="border px-4 py-2"><%= user.role === 1 ? "Admin" : "Customer" %></td>                   
+                            <td class="border px-4 py-2">
+
+                                <div class="flex space-x-2">
+                                    <button onclick="window.location.href='/admin/manage-users/<%= user._id %>'" 
+                                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded-md shadow">
+                                        ViewDetails
+                                    </button>
+                                    <form action="/admin/manage-users/<%= user._id %>/ban" method="POST">
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded-md shadow">
+                                            <%= user.status === 1 ? "Ban" : "Unban" %>
+                                        </button>
+                                    </form>
+                                </div>                                
+                            </td>
+                        </tr>                    
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-gray-500">
+                            No Account Found!
+                        </td>
+                    </tr>
+                <% } %>
             </tbody>
-        </table>
+        </table>        
     </div>
-` }) %>

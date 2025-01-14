@@ -209,11 +209,11 @@
                             </td>
                             <td class="border px-4 py-3">
                                 <div class="flex space-x-2">
-                                    <button onclick="window.location.href='/manage-products/<%= product._id %>'" 
+                                    <button onclick="window.location.href='/admin/manage-products/<%= product._id %>'" 
                                         class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded-md shadow">
                                         Edit
                                     </button>
-                                    <form action="/manage-products/delete-product/<%= product._id %>" method="POST" class="inline">
+                                    <form action="/admin/manage-products/delete-product/<%= product._id %>" method="POST" class="inline">
                                         <button type="submit" 
                                             class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded-md shadow">
                                             Delete

@@ -31,6 +31,14 @@ const userSchema = new Schema({
             },
         ],
     },
+    status: {
+        type: Number,
+        required: true,
+    },
+    role: {
+        type: Number,
+        required: true,
+    }
 });
 
 userSchema.methods.addToCart = function (product) {

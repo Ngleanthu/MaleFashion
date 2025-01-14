@@ -59,12 +59,12 @@ app.use((req, res, next) => {
 
 
 app.use(productRoutes);
-app.use('/manage-products', adminRoutes);
+app.use('/admin', adminRoutes);
 app.use(authRoutes);
 
 // Admin dashboard and pages
-app.get('/dashboard', (req, res) => res.render('admin/dashboard', { path: '/dashboard' }));
-app.get('/manage-users', (req, res) => res.render('admin/manage-users', { path: '/manage-users' }));
+// app.get('/admin/dashboard', (req, res) => res.render('admin/dashboard', { path: '/dashboard' }));
+// app.get('/manage-users', (req, res) => res.render('admin/manage-users', { path: '/manage-users' }));
 
 // User pages
 app.get('/', (req, res) => res.render('user/index', { path: '/'}));
