@@ -4,6 +4,39 @@ const Order = require('../models/order');
 exports.dashboard = (req, res, next) => {
     res.render('admin/dashboard', {path: 'admin/dashboard'});
 }
+
+exports.getOrderDetails = (req, res, next) => {
+    const orderId = req.params.id;      
+    Order.findById(orderId)
+        .then(order => {
+            if (!order) {                
+                return res.status(404).send('Order not found');
+            }            
+            res.render('admin/manage-orders', {
+                isAuthenticated: req.session.isLoggedIn,
+                order: order,  
+                path: '/manage-orders',  
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error fetching order details');
+        });
+};
+exports.getAllOrders = (req, res, next) => {
+    Order.find()
+    .then(orders => {
+        res.render('admin/manage-orders', {
+            isAuthenticated: req.session.isLoggedIn,
+            orders: orders,
+            path: '/manage-orders',  // Truyền biến 'path' vào view         
+        });
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).send('Error fetching users');
+    });
+};
 exports.getAllUsers = (req, res, next) => {
     User.find()
     .then(users => {

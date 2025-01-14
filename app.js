@@ -48,21 +48,21 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req, res, next) => {
-    User.findById("678554e7b5dc05401b8a81ed").then(user =>{
-        res.locals.user = user || null; 
-        next();
-    })
-    .catch(err => {
-        console.error(err);
-        res.locals.user = null;  // Gán null nếu có lỗi
-        next();
-    });
-    // if (req.isAuthenticated()) {
-    //     res.locals.user = req.user;  // Truyền thông tin user cho tất cả các view
-    // } else {
-    //     res.locals.user = null;  // Nếu chưa đăng nhập, user là null
-    // }
-    // next();
+    // User.findById("678554e7b5dc05401b8a81ed").then(user =>{
+    //     res.locals.user = user || null; 
+    //     next();
+    // })
+    // .catch(err => {
+    //     console.error(err);
+    //     res.locals.user = null;  // Gán null nếu có lỗi
+    //     next();
+    // });
+    if (req.isAuthenticated()) {
+        res.locals.user = req.user;  // Truyền thông tin user cho tất cả các view
+    } else {
+        res.locals.user = null;  // Nếu chưa đăng nhập, user là null
+    }
+    next();
 });
 
 

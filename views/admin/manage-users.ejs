@@ -24,10 +24,10 @@
                             <td class="border px-4 py-2">
 
                                 <div class="flex space-x-2">
-                                    <button onclick="window.location.href='/admin/manage-users/<%= user._id %>'" 
-                                        class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded-md shadow">
-                                        ViewDetails
-                                    </button>
+                                    <button onclick="showModal('<%= user._id %>')" 
+                                        class="bg-blue-500 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-md shadow">
+                                        View Details
+                                    </button>   
                                     <form action="/admin/manage-users/<%= user._id %>/ban" method="POST">
                                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded-md shadow">
                                             <%= user.status === 1 ? "Ban" : "Unban" %>
@@ -35,7 +35,26 @@
                                     </form>
                                 </div>                                
                             </td>
-                        </tr>                    
+                        </tr>  
+                        <div id="userModal_<%= user._id %>" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+                            <div class="bg-white p-6 rounded-lg shadow-lg">
+                                <h2 class="text-2xl font-semibold">User Account Details</h2>
+                                <div id="modalContent_<%= user._id %>">
+                                    <!-- Render thông tin tài khoản người dùng -->
+                                    <p><strong>User ID:</strong> <%= user._id %></p>
+                                    <p><strong>FullName:</strong> <%= user.fullname %></p>
+                                    <p><strong>Username</strong>:</strong> <%= user.username %></p>
+                                    <p><strong>Email:</strong> <%= user.email %></p>
+                                    <p><strong>Role:</strong> <%= user.role === 1 ? "Admin" : "Customer" %></p>                                   
+                                    <p><strong>Status:</strong> <%= user.status === 1 ? "Active" : "Inactive" %></p>                                                                
+                                    <p><strong>Joined At:</strong> <%= String(user.createdAt).replace(" ", ", ") %></p>                                
+                                </div>
+                                <div class="text-center">
+                                    <button onclick="closeModal('<%= user._id %>')" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-md">Close</button>
+                                </div>
+                            </div>
+                        </div>    
+                                    
                     <% }); %>
                 <% } else { %>
                     <tr>
@@ -43,7 +62,32 @@
                             No Account Found!
                         </td>
                     </tr>
+
+                    
+                    
+                    
                 <% } %>
             </tbody>
         </table>        
     </div>
+    <script>
+        // Hàm mở modal
+        function showModal(userId) {
+            const modal = document.getElementById(`userModal_${userId}`);
+            modal.classList.remove('hidden');
+        }
+
+        // Hàm đóng modal
+        function closeModal(userId) {
+            const modal = document.getElementById(`userModal_${userId}`);
+            modal.classList.add('hidden');
+        }
+
+        // Đảm bảo modal đóng khi người dùng nhấn ra ngoài
+        window.onclick = function(event) {
+            if (event.target.classList.contains('fixed')) {
+                event.target.classList.add('hidden');
+            }
+        };
+
+    </script>
