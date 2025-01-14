@@ -35,11 +35,17 @@ exports.postAddProducts = (req, res, next) => {
 };
 
 exports.getAllProducts = (req, res, next) => {
+    let page = req.query.page ? req.query.page : 1;
+    let limit = 2; 
     Product.find()  // Sử dụng phương thức fetchAll trong model Product
         .then(products => {
             res.render('admin/manage-products', {
-                prods: products,
-                path: '/manage-products'  // Truyền biến 'path' vào view
+                prods: products.slice((page - 1) * limit, page * limit),
+                path: '/manage-products',  // Truyền biến 'path' vào view
+                currentPage: page, // Trang hiện tại
+                totalProducts: products.length, // Tổng số sản phẩm
+                totalPages: Math.ceil(products.length / limit), // Tổng số trang (2 sản phẩm/trang)
+                limit: limit, // Số lượng sản phẩm mỗi trang
             });
         })
         .catch(err => {
@@ -72,7 +78,6 @@ exports.getEditProduct = (req, res, next) => {
         });
       });
 };
-
 
 // Cập nhật thông tin sản phẩm khi người dùng gửi form
 exports.postEditProduct = async (req, res, next) => {
@@ -112,4 +117,75 @@ exports.postDeleteProduct = (req, res, next) => {
         .catch(err => {
             console.log(err);
         });
+};
+
+exports.filterProducts = async (req, res) => {
+    try {
+        const queryConditions = [];
+    
+        if (req.query.category) {
+            queryConditions.push({ category: req.query.category });
+        }
+    
+        if (req.query.brand) {
+            queryConditions.push({ brand: req.query.brand });
+        }
+    
+        if (req.query.tags) {
+            queryConditions.push({ tags: req.query.tags });
+        }
+    
+        if (req.query.status) {
+            queryConditions.push({ status: req.query.status });
+        }
+    
+        if (req.query.search) {
+            queryConditions.push({ title: { $regex: req.query.search, $options: 'i' } });
+        }
+    
+        const finalQuery = queryConditions.length > 0 ? { $and: queryConditions } : {};    
+
+        let query = Product.find(finalQuery);
+        const totalProducts = await Product.countDocuments(finalQuery);
+
+        if (req.query.sort) {
+            if (req.query.sort === 'DESC') {
+                query = query.sort({ price: -1 });
+            } else if (req.query.sort === 'ASC') {
+                query = query.sort({ price: 1 });
+            }
+        }
+
+        // Phân trang
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.max(1, parseInt(req.query.limit) || 2);
+        const skip = (page - 1) * limit;
+
+        query = query.skip(skip).limit(limit);
+
+        // Lấy sản phẩm và tổng số sản phẩm
+        const [products] = await Promise.all([
+            query
+        ]);
+
+        // Trả kết quả
+        res.render("admin/manage-products", {
+            prods: products,
+            path: "/manage-products",
+            currentPage: page,
+            totalProducts: totalProducts,
+            totalPages: Math.ceil(totalProducts / limit),
+            limit: limit,
+        });
+
+    } catch (err) {
+        console.error("Error filtering products:", {
+            error: err.message,
+            stack: err.stack,
+        });
+        res.status(500).json({
+            success: false,
+            message: "Đã xảy ra lỗi khi lọc sản phẩm.",
+        });
+    }
 };
