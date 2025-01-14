@@ -15,4 +15,5 @@ router.get('/profile', authController.getProfile);
 
 router.get('/logout', authController.getLogout);  // Đăng xuất
 
+// router.get('/verify-email/:token', authController.verifyEmail);
 module.exports = router;

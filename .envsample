@@ -8,3 +8,6 @@ npm install --save express
 npm install --save mongodb
 npm install --save mongoose
 npm install --save dotenv
+npm install nodemailer
+npm install nodemailer crypto
+npm install --save nodemailer nodemailer-sendgrid-transport

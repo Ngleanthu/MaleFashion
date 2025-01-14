@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { getDefaultHighWaterMark } = require("nodemailer/lib/xoauth2");
 
 const Schema = mongoose.Schema;
 
@@ -33,16 +34,19 @@ const userSchema = new Schema({
     },
     status: {
         type: Number,
-        required: true,
+        default: 1,
     },
     role: {
         type: Number,
-        required: true,
+        default: 0,
     },
     createdAt: {
         type: Date,
         default: Date.now,
-    }
+    },
+    // verificationToken: { type: String }, // Thêm trường token xác thực
+    // isVerified: { type: Boolean, default: false },
+    // tokenExpiration: { type: Date }
 });
 
 userSchema.methods.addToCart = function (product) {
