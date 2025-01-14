@@ -4,23 +4,6 @@ const Order = require('../models/order');
 exports.dashboard = (req, res, next) => {
     res.render('admin/dashboard', {path: 'admin/dashboard'});
 }
-exports.getAllUsers = (req, res, next) => {
-    User.find()
-    .then(users => {
-        res.render('admin/manage-users', {
-            isAuthenticated: req.session.isLoggedIn,
-            users: users,
-            path: '/manage-users',  // Truyền biến 'path' vào view
-            
-            
-        });
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).send('Error fetching users');
-    });
-};
-
 exports.postAddProducts = (req, res, next) => {
     const title = req.body.title;
     const imgUrl = req.body.imgUrl;
@@ -54,16 +37,21 @@ exports.postAddProducts = (req, res, next) => {
             console.error(err);
         });
 };
+
 exports.getAllUsers = (req, res, next) => {
+    let page = req.query.page ? req.query.page : 1;
+    let limit = 2; 
 
     User.find()
         .then(users => {
             res.render('admin/manage-users', {
                 isAuthenticated: req.session.isLoggedIn,
-                users: users,
+                users: users.slice((page - 1) * limit, page * limit),
                 path: '/manage-users',  // Truyền biến 'path' vào view
-                
-                
+                currentPage: page, // Trang hiện tại
+                totalProducts: users.length, // Tổng số sản phẩm
+                totalPages: Math.ceil(users.length / limit), // Tổng số trang (2 sản phẩm/trang)
+                limit: limit, // Số lượng sản phẩm mỗi trang
             });
         })
         .catch(err => {
@@ -329,4 +317,68 @@ exports.getTopProducts = async (req, res) => {
         console.error(error);
         res.status(500).send('Error fetching top products');
     }
+};
+
+
+exports.filterAccountByAdmin = (req, res, next) => {
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 2;
+    let searchField = req.query.searchField || ''; // Tìm kiếm theo trường nào (username, email...)
+    let searchTerm = req.query.searchTerm || ''; // Từ khóa tìm kiếm
+    let filterRole = req.query.filterRole || ''; // Lọc theo vai trò
+    let sortField = req.query.sortField || ''; // Sắp xếp theo trường nào (username, email...)
+    let sortType = req.query.sortType || ''; // Sắp xếp theo thứ tự ASC hoặc DESC
+    let filterStatus = req.query.filterStatus || ''; // Lọc theo trạng thái (active, inactive)
+
+    // Build search query
+    let query = {};
+    if (searchField && searchTerm) {
+        query[searchField] = { $regex: searchTerm, $options: 'i' }; // Tìm kiếm không phân biệt chữ hoa, chữ thường
+    }
+    if (filterRole) {
+        query.role = filterRole;
+    }
+    if (filterStatus) {
+        query.status = filterStatus; // Chuyển đổi thành boolean
+    }
+
+    // Sorting
+    let sort = {};
+    if (sortField) {
+        sort[sortField] = sortType === 'ASC' ? 1 : -1; // Sắp xếp theo thứ tự ASC hoặc DESC
+    }
+
+    User.find(query)
+        .sort(sort)
+        .skip((page - 1) * limit)  // Bỏ qua số lượng kết quả từ các trang trước
+        .limit(limit)  // Giới hạn số lượng kết quả mỗi trang
+        .then(users => {
+            User.countDocuments(query)  // Đếm tổng số người dùng thỏa mãn filter
+                .then(totalUsers => {
+                    const totalPages = Math.ceil(totalUsers / limit); // Tổng số trang
+                    res.render('admin/manage-users', {  // Trả về view
+                        isAuthenticated: req.session.isLoggedIn,
+                        users: users,
+                        path: '/manage-users',  // Truyền biến 'path' vào view
+                        currentPage: page, // Trang hiện tại
+                        totalUsers: totalUsers, // Tổng số người dùng
+                        totalPages: totalPages, // Tổng số trang
+                        limit: limit, // Số lượng người dùng mỗi trang
+                        searchField: searchField,
+                        searchTerm: searchTerm,
+                        filterRole: filterRole,
+                        sortField: sortField,
+                        sortType: sortType,
+                        filterStatus: filterStatus
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).send('Error counting users');
+                });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error fetching users');
+        });
 };
