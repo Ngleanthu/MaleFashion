@@ -24,12 +24,18 @@ exports.getOrderDetails = (req, res, next) => {
         });
 };
 exports.getAllOrders = (req, res, next) => {
+    let page = req.query.page ? req.query.page : 1;
+    let limit = 2; 
     Order.find()
     .then(orders => {
         res.render('admin/manage-orders', {
             isAuthenticated: req.session.isLoggedIn,
-            orders: orders,
-            path: '/manage-orders',  // Truyền biến 'path' vào view         
+            orders: orders.slice((page - 1) * limit, page * limit),
+            path: '/manage-orders',  // Truyền biến 'path' vào view       
+            currentPage: page, // Trang hiện tại
+            totalProducts: orders.length, // Tổng số sản phẩm
+            totalPages: Math.ceil(orders.length / limit), // Tổng số trang (2 sản phẩm/trang)
+            limit: limit, // Số lượng sản phẩm mỗi trang  
         });
     })
     .catch(err => {
@@ -44,8 +50,6 @@ exports.getAllUsers = (req, res, next) => {
             isAuthenticated: req.session.isLoggedIn,
             users: users,
             path: '/manage-users',  // Truyền biến 'path' vào view
-            
-            
         });
     })
     .catch(err => {
@@ -368,7 +372,6 @@ exports.getTopProducts = async (req, res) => {
     }
 };
 
-
 exports.filterAccountByAdmin = (req, res, next) => {
     let page = req.query.page ? parseInt(req.query.page) : 1;
     let limit = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 2;
@@ -429,5 +432,87 @@ exports.filterAccountByAdmin = (req, res, next) => {
         .catch(err => {
             console.error(err);
             res.status(500).send('Error fetching users');
+        });
+};
+
+exports.updateStatusOrder = async (req, res) => {
+    try {
+      const orderId = req.params.id;
+      const order = await Order.findById(orderId);
+  
+      if (!order) {
+        console.log("order not found");
+        return res.status(404).render('admin/manage-orders', {
+          message: 'Sản phẩm không tồn tại.',
+          path: '/manage-orders',
+        });
+      }
+  
+      let currentStatus = order.status;
+      if (currentStatus === 'Pending') {
+        order.status = 'Shipped';
+      } else if (currentStatus === 'Shipped') {
+        order.status = 'Delivered';
+      } else {
+        return res.status(500).render('admin/manage-orders', {
+          message: 'Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng.',
+          path: '/manage-orders',
+        });
+      }
+  
+      await order.save();
+
+      exports.getAllOrders(req, res);
+  
+    } catch (err) {
+      console.log("Error:", err);
+      res.status(500).render('admin/manage-orders', {
+        message: 'Đã xảy ra lỗi khi tải sản phẩm.',
+        path: '/manage-orders',
+      });
+    }
+};
+  
+exports.filterOrder = (req, res) => {
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 2;
+    let status = req.query.status || '';
+    let date = req.query.date || '';
+
+    let query = {};
+
+    // Lọc theo trạng thái đơn hàng
+    if (status) {
+        query.status = status;
+    }
+
+    Order.find(query)
+        .sort({ createdAt: date == 1 ? 1 : -1 })  // Sắp xếp đơn hàng mới nhất lên đầu
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .then(orders => {
+            Order.countDocuments(query)
+                .then(totalOrders => {
+                    const totalPages = Math.ceil(totalOrders / limit);
+                    res.render('admin/manage-orders', {
+                        isAuthenticated: req.session.isLoggedIn,
+                        orders: orders,
+                        path: '/manage-orders',
+                        currentPage: page,
+                        totalOrders: totalOrders,
+                        totalPages: totalPages,
+                        limit: limit,
+                        status: status,
+                        date: date
+                    });
+                })
+                .catch(err => {
+                    console.error('Error counting orders:', err);
+                    res.status(500).send('Lỗi khi đếm số lượng đơn hàng');
+                });
+        })
+        .catch(err => {
+            console.error('Error fetching orders:', err);
+            res.status(500).send('Lỗi khi tải danh sách đơn hàng');
         });
 };
