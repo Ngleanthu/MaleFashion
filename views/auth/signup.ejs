@@ -29,7 +29,16 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="signup__form">
                         <h4>Create an Account</h4>
-                        
+                        <% if (errorMessage.length > 0) {                            
+                             %>
+                            <div class="alert alert-danger" style="display: block;">
+                                <p><%= errorMessage %></p>
+                            </div>
+                        <% } else { %>
+                            <div class="alert alert-danger" style="display: none;">
+                                <p><%= errorMessage %></p>
+                            </div>
+                        <% } %>                        
                         <form action="/signup" method="POST">
                             <div class="form-group">
                                 <label for="name">Full Name</label>
