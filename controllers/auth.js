@@ -198,6 +198,45 @@ exports.postLogout = (req, res) => {
     });
 };
 
+exports.updateUser = async (req, res) => {
+    const fullname = req.body.fullname;
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found!' });
+        }
+
+        // Cập nhật các trường thông tin người dùng
+        if (fullname) user.fullname = fullname;
+        if (username) user.username = username;
+        if (email) user.email = email;
+
+        // Nếu có mật khẩu mới, mã hóa và cập nhật
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 12); // Mã hóa password
+            user.password = hashedPassword;
+        }
+
+        // Lưu thay đổi vào cơ sở dữ liệu
+        await user.save();
+
+        // Render lại view profile với thông tin người dùng đã cập nhật
+        return res.render('user/profile', { 
+            user: user,  // Trả về dữ liệu người dùng đã được cập nhật
+            message: 'Profile updated successfully', // Thông báo thành công
+            path: '/profile'  // Để có thể highlight menu nếu cần
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
 
 //GET profile
 exports.getProfile = (req, res) => {
