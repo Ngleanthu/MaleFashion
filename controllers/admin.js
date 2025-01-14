@@ -173,7 +173,8 @@ exports.postEditProduct = async (req, res, next) => {
         size: req.body.size,
         brand: req.body.brand,
         tags: req.body.tags,
-        amount: req.body.amount
+        amount: req.body.amount,
+        status: req.body.status
     };
 
     try {

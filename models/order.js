@@ -20,7 +20,8 @@ const orderSchema = new Schema({
         }        
     },
     createdAt: { type: String, required: true },  // Ngày tạo đơn hàng
-    status: { type: String, default: 'Đang xác nhận' }
+    status: { type: String, default: 'Pending' }
+
 });
 
 module.exports = mongoose.model("Order", orderSchema);

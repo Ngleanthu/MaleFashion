@@ -49,17 +49,26 @@
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">
                                 <li><a href="/about" class="<%= path === '/about' ? 'active' : '' %>"">About Us</a></li>
-                                <li><a href="/shopping-cart" class="<%= path === '/shopping-cart' ? 'active' : '' %>">Shopping Cart</a></li>
-                                <li><a href="/checkout" class="<%= path === '/checkout' ? 'active' : '' %>">Check Out</a></li>
-                                <li><a href="/order" class="<%= path === '/order' ? 'active' : '' %>">Your Orders</a></li>
+                                <% if (user) { %>
+                                    <li><a href="/shopping-cart" class="<%= path === '/shopping-cart' ? 'active' : '' %>">Shopping Cart</a></li>
+                                    <li><a href="/checkout" class="<%= path === '/checkout' ? 'active' : '' %>">Check Out</a></li>                                
+                                        <li><a href="/order" class="<%= path === '/order' ? 'active' : '' %>">Your Orders</a></li>
+                                <% } %>        
                                 <li><a href="/blog-details" class="<%= path === '/blog-details' ? 'active' : '' %>">Blog Details</a></li>
                             </ul>
                         </li>
                         <li><a href="/blog" class="<%= path === '/blog' ? 'active' : '' %>">Blog</a></li>
                         <li><a href="/contact" class="<%= path === '/contact' ? 'active' : '' %>">Contacts</a></li>
                         <% if (user) { %>
-                            <li><a href="/profile" class="<%= path === '/profile' ? 'active' : '' %>">Hello, <%= user.username %></a></li>
+                            <li>
+                                <a href="/profile" class="<%= path === '/profile' ? 'active' : '' %>" style="font-size: 18px; font-weight: bold; color: #FF6347; text-transform: uppercase; transition: color 0.3s ease, transform 0.3s ease;">
+                                    Hello, <%= user.username %>
+                                </a>
+                            </li>
                             <li><a href="/logout">Logout</a></li>
+                            <% if (user.role == 1){ %>
+                                <li><a href="/admin/dashboard">ManagerDashboard</a></li>
+                            <%} %>
                         <% } else { %>                        
                             <li><a href="/signin" class="<%= path === '/signin' ? 'active' : '' %>">Sign In</a></li>
                             <li><a href="/signup" class="<%= path === '/signup' ? 'active' : '' %>">Sign Up</a></li>

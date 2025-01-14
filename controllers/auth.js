@@ -18,18 +18,19 @@ exports.getSignIn = (req, res, next) => {
 // POST sign-in (using Passport)
 exports.postSignIn = (req, res, next) => {
     passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: 'signin',
-        failureFlash: true
+        successRedirect: '/', 
+        failureRedirect: '/signin', 
+        failureFlash: true 
     })(req, res, next);
-    
 };
+
 
 // GET sign-up page
 exports.getSignUp = (req, res, next) => {
     res.render("auth/signup", {
         path: "/signup",
-        isAuthenticated: req.session.isLoggedIn || false
+        isAuthenticated: req.session.isLoggedIn || false,
+        errorMessage: req.flash('error') || null // Truyền thông báo lỗi nếu có
     });
 };
 
@@ -38,14 +39,17 @@ exports.postSignUp = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     let role = 0;
-    if (password.startsWith(adminKey)){
+    if (password.startsWith(process.env.ADMIN_KEY)){
         role = 1;
     }
     const username = req.body.username;
     const fullname = req.body.fullname;
     User.findOne({email: email}).then(userDoc => {
         if(userDoc){
-            return res.redirect('/signin')
+            return res.render('auth/signup', {
+                errorMessage: 'Email này đã được đăng ký. Vui lòng chọn email khác.',
+                path: "/signup",
+            });
         }
         return bcrypt.hash(password, 12).then(hashedPassword => {
             const user = new User({
@@ -56,6 +60,7 @@ exports.postSignUp = (req, res, next) => {
                 cart: { items: [] },
                 status: 1, 
                 role: role,
+                createdAt: new Date().toLocaleString('vi-VN'),
             });
             return user.save();
         })
@@ -79,11 +84,18 @@ exports.getForgotPassword = (req, res, next) => {
 exports.getLogout = (req, res, next) => {
     req.logout((err) => {
         if (err) {
-            return next(err); // Xử lý lỗi nếu có
+            return next(err); 
         }
-        res.redirect('/'); // Chuyển hướng về trang chủ sau khi logout
+        req.session.destroy((err) => {
+            if (err) {
+                return next(err); 
+            }
+            res.clearCookie('connect.sid'); 
+            res.redirect('/'); 
+        });
     });
 };
+
 
 
 // POST logout

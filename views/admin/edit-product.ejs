@@ -62,10 +62,20 @@
         </div>
 
         <!-- Amount -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
             <label for="amount" class="block text-gray-700 text-sm font-bold mb-2">Amount:</label>
             <input type="number" id="amount" name="amount" value="<%= product.amount %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div> -->
+
+        <!-- status -->
+        <div class="mb-4">
+            <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status:</label>
+            <select id="status" name="status" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="1" <%= product.status === 1 ? 'selected' : '' %>>On Stock</option>
+                <option value="0" <%= product.status === 0 ? 'selected' : '' %>>Out of Stock</option>
+            </select>
         </div>
+        
 
         <!-- Submit Button -->
         <div class="flex items-center justify-between">

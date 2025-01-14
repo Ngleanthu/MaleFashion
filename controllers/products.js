@@ -167,7 +167,6 @@ exports.postOrder = (req, res, next) => {
                 },
                 products: products,
                 createdAt: new Date().toLocaleString('vi-VN'), // Thêm ngày tạo
-                status: 'Đang xác nhận' // Thêm trạng thái
             });
             return order.save();
         })
