@@ -7,9 +7,13 @@
 <div class="offcanvas-menu-wrapper">
     <div class="offcanvas__option">
         <div class="offcanvas__links">
-            <a href="/signin" class="<%= path === '/signin' ? 'active' : '' %>">Sign In</a>
-            <a href="/signup" class="<%= path === '/signup' ? 'active' : '' %>">Sign Up</a>
-            <a href="/faq" class="<%= path === '/faq' ? 'active' : '' %>">FAQs</a>
+            <% if (user) { %>
+                <a href="/profile" class="<%= path === '/profile' ? 'active' : '' %>">Hello, <%= user.username %></a>
+                <a href="/logout">Logout</a>    
+            <% } else { %>                        
+                <a href="/signin" class="<%= path === '/signin' ? 'active' : '' %>">Sign In</a>
+                <a href="/signup" class="<%= path === '/signup' ? 'active' : '' %>">Sign Up</a>   
+            <% } %>
         </div>
         <div class="offcanvas__top__hover">
             <span>Usd <i class="arrow_carrot-down"></i></span>
@@ -46,9 +50,13 @@
                 <div class="col-lg-6 col-md-5">
                     <div class="header__top__right">
                         <div class="header__top__links">
-                            <a href="/signin" class="<%= path === '/signin' ? 'active' : '' %>">Sign In</a>
-                            <a href="/signup" class="<%= path === '/signup' ? 'active' : '' %>">Sign Up</a>
-                            <a href="/faq" class="<%= path === '/faq' ? 'active' : '' %>">FAQs</a>
+                            <% if (user) { %>
+                                <a href="/profile" class="<%= path === '/profile' ? 'active' : '' %>">Hello, <%= user.username %></a>
+                                <a href="/logout">Logout</a>    
+                            <% } else { %>                        
+                                <a href="/signin" class="<%= path === '/signin' ? 'active' : '' %>">Sign In</a>
+                                <a href="/signup" class="<%= path === '/signup' ? 'active' : '' %>">Sign Up</a>   
+                            <% } %>
                         </div>
                         <div class="header__top__hover">
                             <span>Usd <i class="arrow_carrot-down"></i></span>

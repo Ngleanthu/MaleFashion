@@ -1,0 +1,2 @@
+MONGO_URI=mongodb+srv://ngleanthu:ngleanthu@cluster0.jxr73.mongodb.net/test?retryWrites=true&w=majority
+SESSION_SECRET=ngleanthu

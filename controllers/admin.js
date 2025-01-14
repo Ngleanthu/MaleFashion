@@ -39,7 +39,8 @@ exports.getAllProducts = (req, res, next) => {
         .then(products => {
             res.render('admin/manage-products', {
                 prods: products,
-                path: '/manage-products'  // Truyền biến 'path' vào view
+                path: '/manage-products',  // Truyền biến 'path' vào view
+                isAuthenticated: req.session.isLoggedIn
             });
         })
         .catch(err => {
@@ -62,6 +63,7 @@ exports.getEditProduct = (req, res, next) => {
         res.render('admin/edit-product', {
           product: product,
           path: `/manage-products/${product._id}`,
+          isAuthenticated: req.session.isLoggedIn
         });
       })
       .catch(err => {
