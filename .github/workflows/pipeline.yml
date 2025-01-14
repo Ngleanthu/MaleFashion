@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [16.x]
 
     steps:
       - name: Checkout source code
@@ -25,6 +25,14 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        run: npm install --save-dev nodemon
+        run: npm install --save express
+        run: npm install --save mongodb
+        run: npm install --save mongoose
+        run: npm install --save dotenv
+        run: npm install nodemailer
+        run: npm install nodemailer crypto
+        run: npm install --save nodemailer nodemailer-sendgrid-transport
 
       - name: Build project
         run: npm run build
