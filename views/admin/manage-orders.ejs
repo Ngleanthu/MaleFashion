@@ -1,0 +1,157 @@
+<%- include('admin-main', { title: 'Order Management', body: `
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Order Management</h1>
+    <p class="text-gray-600">Manage customer orders in the store.</p>
+
+    <!-- Bộ lọc và tìm kiếm -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6 mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+
+            <!-- Lọc theo trạng thái đơn hàng -->
+            <div>
+                <label for="filterStatus" class="block text-sm font-semibold text-gray-700 mb-2">Filter by Status</label>
+                <select id="filterStatus" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Canceled">Canceled</option>
+                </select>
+            </div>
+            <!-- Lọc theo ngày -->
+            <div>
+                <label for="filterDate" class="block text-sm font-semibold text-gray-700 mb-2">Filter by Date</label>
+                <input type="date" id="filterDate" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách đơn hàng -->
+    <div class="mt-6 bg-white shadow-md rounded-lg p-6">
+        <table id="orderList" class="min-w-full border border-gray-200 rounded-md overflow-hidden">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Customer</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                </tr>
+            </thead>
+
+            ` }) %>
+            <tbody>
+                <% let numberCnt = 0 %>
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(function(order) { %>
+                        <tr class="border-b hover:bg-gray-50">
+                            <% numberCnt += 1 %>
+                            <td class="border px-4 py-3"><%= numberCnt %></td>
+                            <td class="border px-4 py-3"><%= order.user.name %></td>
+                            <td class="border px-4 py-3"><%= String(order.createdAt).replace(" ", ", ") %></td>                                                    
+                            <td class="border px-4 py-3">
+                                <span class="px-2 py-1 rounded-full 
+                                    <%= order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : '' %>
+                                    <%= order.status === 'Shipped' ? 'bg-blue-100 text-blue-700' : '' %>
+                                    <%= order.status === 'Delivered' ? 'bg-green-100 text-green-700' : '' %>
+                                    <%= order.status === 'Canceled' ? 'bg-red-100 text-red-700' : '' %>
+                                    ">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                            <td class="border px-4 py-2">                            
+                                    <div class="flex space-x-2">
+                                        <button onclick="showModal('<%= order._id %>')" 
+                                            class="bg-blue-500 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-md shadow">
+                                            View Details
+                                        </button>                                    
+                                        <button onclick="window.location.href='/admin/manage-orders/<%= order._id %>'" 
+                                            class="bg-red-500 hover:bg-red-700 text-white text-sm px-3 py-1 rounded-md shadow">
+                                            Update
+                                        </button>
+                                    </div>                                                                                                                 
+                            </td>
+                        </tr>
+
+                        <!-- Modal for each order -->
+                        <div id="orderModal_<%= order._id %>" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 max-w-6xl">
+                                <h2 class="text-2xl font-semibold">Order Details</h2>
+                                <div id="modalContent_<%= order._id %>">
+                                    <!-- Render thông tin đơn hàng -->
+                                    <p><strong>Order ID:</strong> <%= order._id %></p>
+                                    <p><strong>Customer Name:</strong> <%= order.user.name %></p>
+                                    <p><strong>Order Date:</strong> <%= String(order.createdAt).replace(" ", ", ") %></p>
+                                    <p><strong>Status:</strong> <%= order.status %></p>
+                                    
+                                    <h3 class="mt-4 text-lg font-semibold">Product Details:</h3>
+                                    <% let totalPrice = 0;
+                                        order.products.forEach(function(item) {
+                                            totalPrice += item.product.price * item.quantity %>
+                                        <div class="flex space-x-4 mb-4">                                        
+                                            <img src="<%= item.product.imgUrl %>" alt="<%= item.product.title %>" class="w-32 h-32 object-cover rounded-lg" style="width: 90px; height: 90px; object-fit: cover;">
+                                            <div class="flex flex-wrap space-x-6">
+                                                <div>
+                                                    <p><strong>Title:</strong> <%= item.product.title %></p>
+                                                </div>                                                
+                                                <div>
+                                                    <p><strong>Brand:</strong> <%= item.product.brand %></p>
+                                                </div>      
+                                                <div>
+                                                    <p><strong>Category:</strong> <%= item.product.category %></p>
+                                                </div>                                       
+                                                <div>
+                                                    <p><strong>Size:</strong> <%= item.product.size %></p>
+                                                </div>
+                                                <div>
+                                                    <p><strong>Price:</strong> ₫<%= new Intl.NumberFormat('vi-VN').format(item.product.price * 1000) %>₫</p>
+                                                </div>
+                                                <div>
+                                                    <p><strong>Quantity:</strong> <%= item.quantity %></p>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                    <div class="mt-4 text-center" >
+                                        <h1><strong>Order Total:</strong> <%= new Intl.NumberFormat('vi-VN').format(totalPrice * 1000) %>₫</h1>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button onclick="closeModal('<%= order._id %>')" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-md">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="6" class="text-center py-3 text-gray-600">No orders found</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Hàm mở modal
+        function showModal(orderId) {
+            const modal = document.getElementById(`orderModal_${orderId}`);
+            modal.classList.remove('hidden');
+        }
+
+        // Hàm đóng modal
+        function closeModal(orderId) {
+            const modal = document.getElementById(`orderModal_${orderId}`);
+            modal.classList.add('hidden');
+        }
+
+        // Đảm bảo modal đóng khi người dùng nhấn ra ngoài
+        window.onclick = function(event) {
+            if (event.target.classList.contains('fixed')) {
+                event.target.classList.add('hidden');
+            }
+        };
+
+    </script>
+

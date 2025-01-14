@@ -164,7 +164,7 @@
                 </label>
                 <select id="filterStatus" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
                     <option value="">All status</option>
-                    <option value="1">In stock</option>
+                    <option value="1">On stock</option>
                     <option value="0">Out of stock</option>
                 </select>
             </div>
@@ -202,7 +202,7 @@
                             <td class="border px-4 py-3 text-center"><%= product.amount %></td>
                             <td class="border px-4 py-3">
                                 <% if (product.status == 1) { %>
-                                    <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">In stock</span>
+                                    <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">On stock</span>
                                 <% } else { %>
                                     <span class="bg-red-100 text-red-700 text-xs font-medium px-2 py-1 rounded-full">Out of stock</span>
                                 <% } %>
@@ -282,14 +282,41 @@
         </div>
     </div>
     
-
-
 </div>
 
         
 </div>
 
 <!-- JS Plugins -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const openModalButton = document.getElementById('openAddProductModal');
+    const closeModalButton = document.getElementById('closeAddProductModal');
+    const addProductModal = document.getElementById('addProductModal');
+    const cancelAddProduct = document.getElementById('cancelAddProduct');
+
+    // Open modal when "Thêm sản phẩm" button is clicked
+    openModalButton.addEventListener('click', function() {
+        addProductModal.classList.remove('hidden'); // Make the modal visible
+    });
+
+    // Close modal when "✖" button is clicked
+    closeModalButton.addEventListener('click', function() {
+        addProductModal.classList.add('hidden'); // Hide the modal
+    });
+
+    // Close modal when "Hủy" button is clicked
+    cancelAddProduct.addEventListener('click', function() {
+        addProductModal.classList.add('hidden'); // Hide the modal
+    });
+
+    // Close modal when clicking outside of the modal (on the overlay)
+    addProductModal.addEventListener('click', function(event) {
+        if (event.target === addProductModal) {
+            addProductModal.classList.add('hidden');
+        }
+    });
+});
 <!-- <script src="js/addProductbyAdmin.js"></script> -->
 
 <script>
@@ -401,7 +428,6 @@ function updateUrl(filters) {
     const newUrl = `/admin/filter?${filters}`;
     history.replaceState(null, '', newUrl);
 }
-
 function setBgImages() {
     document.querySelectorAll('.set-bg').forEach(el => {
         const bg = el.getAttribute('data-setbg');

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const User = require("../models/user");
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -36,6 +37,10 @@ exports.getSignUp = (req, res, next) => {
 exports.postSignUp = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
+    let role = 0;
+    if (password.startsWith(adminKey)){
+        role = 1;
+    }
     const username = req.body.username;
     const fullname = req.body.fullname;
     User.findOne({email: email}).then(userDoc => {
@@ -48,7 +53,9 @@ exports.postSignUp = (req, res, next) => {
                 fullname: fullname,
                 username: username,
                 password: hashedPassword,
-                cart: { items: [] } 
+                cart: { items: [] },
+                status: 1, 
+                role: role,
             });
             return user.save();
         })

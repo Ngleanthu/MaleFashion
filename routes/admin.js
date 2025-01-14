@@ -14,7 +14,9 @@ router.post('/manage-products/delete-product/:id', adminController.postDeletePro
 router.get('/manage-users', adminController.getAllUsers);
 router.get('/filterUser', adminController.filterAccountByAdmin);
 
-
+// order
+router.get('/manage-orders', adminController.getAllOrders);
+router.get('/manage-orders/:id', adminController.getOrderDetails);
 
 router.get('/filter', adminController.filterProducts);
 router.get('/dashboard/revenue-report', adminController.getRevenueReport);
