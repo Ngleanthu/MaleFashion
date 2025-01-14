@@ -1,4 +1,6 @@
 const Product = require('../models/products');
+const User = require('../models/user');
+const Order = require('../models/order');
 
 exports.postAddProducts = (req, res, next) => {
     const title = req.body.title;
@@ -189,5 +191,106 @@ exports.filterProducts = async (req, res) => {
             success: false,
             message: "Đã xảy ra lỗi khi lọc sản phẩm.",
         });
+    }
+};
+
+exports.getDashboardStats = async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalOrders = await Order.countDocuments();
+        
+        const orders = await Order.find();
+        const totalRevenue = orders.reduce((sum, order) => {
+            return sum + order.products.reduce((prodSum, item) => {
+                return prodSum + (item.product.price * item.quantity);
+            }, 0);
+        }, 0);
+        
+        res.render('admin/dashboard', {
+            path: '/dashboard',
+            totalUsers,
+            totalOrders,
+            totalRevenue,
+            revenueIncrease: 10,  // Giả sử tăng 10%
+            userIncrease: 5,      // Giả sử tăng 5%
+            orderIncrease: 2      // Giả sử tăng 2%
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching dashboard data');
+    }
+};
+
+exports.getRevenueReport = async (req, res) => {
+    try {
+        const { range } = req.query; // day, week, month
+        let startDate;
+
+        switch (range) {
+            case 'day':
+                startDate = new Date(new Date().setDate(new Date().getDate() - 1));
+                break;
+            case 'week':
+                startDate = new Date(new Date().setDate(new Date().getDate() - 7));
+                break;
+            case 'month':
+                startDate = new Date(new Date().setMonth(new Date().getMonth() - 1));
+                break;
+            default:
+                startDate = new Date(new Date().setDate(new Date().getDate() - 7));
+        }
+
+        const orders = await Order.find({ createdAt: { $lte: startDate } });
+        const revenueData = orders.map(order => ({
+            date: order.createdAt.split(' ')[1],
+            amount: order.products.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
+        }));
+
+        res.json(revenueData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching revenue report');
+    }
+};
+
+exports.getTopProducts = async (req, res) => {
+    try {
+        const { range } = req.query; // day, week, month
+        let startDate;
+
+        switch (range) {
+            case 'day':
+                startDate = new Date(new Date().setDate(new Date().getDate() - 1));
+                break;
+            case 'week':
+                startDate = new Date(new Date().setDate(new Date().getDate() - 7));
+                break;
+            case 'month':
+                startDate = new Date(new Date().setMonth(new Date().getMonth() - 1));
+                break;
+            default:
+                startDate = new Date(new Date().setDate(new Date().getDate() - 7));
+        }
+
+        const orders = await Order.find({ createdAt: { $lte: startDate } });
+        const productSales = {};
+
+        orders.forEach(order => {
+            order.products.forEach(item => {
+                const productName = item.product.name;
+                const revenue = item.product.price * item.quantity;
+                productSales[productName] = (productSales[productName] || 0) + revenue;
+            });
+        });
+
+        const topProducts = Object.entries(productSales)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([name, revenue]) => ({ name, revenue }));
+
+        res.json(topProducts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching top products');
     }
 };

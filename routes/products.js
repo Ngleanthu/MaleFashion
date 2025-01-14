@@ -18,5 +18,8 @@ router.get('/filter', productController.filterProducts);
 
 
 router.get('/admin/filter', adminController.filterProducts);
+router.get('/dashboard/revenue-report', adminController.getRevenueReport);
+router.get('/dashboard/top-products', adminController.getTopProducts);
+router.get('/dashboard', adminController.getDashboardStats);
 
 module.exports = router;

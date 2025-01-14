@@ -1,64 +1,142 @@
 <%- include('admin-main', { title: 'Dashboard', body: `
-    <!-- Main Content -->
-    <div class="flex-1 p-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Card 1 -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="text-xl font-semibold text-gray-800">Tổng số người dùng</div>
-                <div class="mt-4 text-4xl font-bold text-blue-600">1,245</div>
-                <div class="mt-2 text-sm text-gray-500">Tăng 5% so với tháng trước</div>
-            </div>
-            <!-- Card 2 -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="text-xl font-semibold text-gray-800">Doanh thu tháng này</div>
-                <div class="mt-4 text-4xl font-bold text-green-600">$5,120</div>
-                <div class="mt-2 text-sm text-gray-500">Tăng 10% so với tháng trước</div>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="text-xl font-semibold text-gray-800">Số đơn hàng</div>
-                <div class="mt-4 text-4xl font-bold text-yellow-600">320</div>
-                <div class="mt-2 text-sm text-gray-500">Tăng 2% so với tháng trước</div>
-            </div>
+    ` }) %>
+<div class="flex-1 p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-xl font-semibold text-gray-800">Tổng số người dùng</div>
+            <div class="mt-4 text-4xl font-bold text-blue-600"><%= totalUsers %></div>
+            <div class="mt-2 text-sm text-gray-500">Tăng <%= userIncrease %>% so với tháng trước</div>
         </div>
-
-        <!-- Chart Section -->
-        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
-            <div class="text-xl font-semibold text-gray-800">Biểu đồ doanh thu</div>
-            <div class="mt-4">
-                <div class="h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
-                    Biểu đồ ở đây
-                </div>
-            </div>
+        <!-- Card 2 -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-xl font-semibold text-gray-800">Doanh thu tháng này</div>
+            <div class="mt-4 text-4xl font-bold text-green-600">$<%= totalRevenue.toLocaleString() %></div>
+            <div class="mt-2 text-sm text-gray-500">Tăng <%= revenueIncrease %>% so với tháng trước</div>
         </div>
-
-        <!-- Table Section -->
-        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
-            <div class="text-xl font-semibold text-gray-800">Danh sách người dùng</div>
-            <table class="mt-4 w-full table-auto">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 text-left bg-gray-100">Tên</th>
-                        <th class="px-4 py-2 text-left bg-gray-100">Email</th>
-                        <th class="px-4 py-2 text-left bg-gray-100">Ngày tham gia</th>
-                        <th class="px-4 py-2 text-left bg-gray-100">Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="px-4 py-2">Nguyễn Văn A</td>
-                        <td class="px-4 py-2">a@example.com</td>
-                        <td class="px-4 py-2">01/01/2023</td>
-                        <td class="px-4 py-2"><span class="bg-green-500 text-white px-2 py-1 rounded">Hoạt động</span></td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2">Trần Thị B</td>
-                        <td class="px-4 py-2">b@example.com</td>
-                        <td class="px-4 py-2">15/03/2022</td>
-                        <td class="px-4 py-2"><span class="bg-yellow-500 text-white px-2 py-1 rounded">Tạm dừng</span></td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Card 3 -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-xl font-semibold text-gray-800">Số đơn hàng</div>
+            <div class="mt-4 text-4xl font-bold text-yellow-600"><%= totalOrders %></div>
+            <div class="mt-2 text-sm text-gray-500">Tăng <%= orderIncrease %>% so với tháng trước</div>
         </div>
     </div>
-` }) %>
+
+    <!-- Chart Section -->
+    <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center">
+            <div class="text-xl font-semibold text-gray-800">Biểu đồ doanh thu</div>
+            <select id="revenueRange" class="border rounded p-2">
+                <option value="day">Ngày</option>
+                <option value="week" selected>Tuần</option>
+                <option value="month">Tháng</option>
+            </select>
+        </div>
+        <div class="mt-4">
+            <canvas id="revenueChart" class="h-64"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Products Section -->
+    <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center">
+            <div class="text-xl font-semibold text-gray-800">Top sản phẩm doanh thu cao nhất</div>
+            <select id="topProductsRange" class="border rounded p-2">
+                <option value="day">Day</option>
+                <option value="week" selected>Week</option>
+                <option value="month">Month</option>
+            </select>
+        </div>
+        <div class="mt-4">
+            <canvas id="topProductsChart" class="h-64"></canvas>
+        </div>
+    </div>
+</div>
+</div> 
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let revenueChart, topProductsChart;
+
+    async function fetchRevenueData(range) {
+        const response = await fetch(`/dashboard/revenue-report?range=${range}`);
+        return response.json();
+    }
+
+    async function fetchTopProducts(range) {
+        const response = await fetch(`/dashboard/top-products?range=${range}`);
+        return response.json();
+    }
+
+    async function renderRevenueChart(range) {
+        const data = await fetchRevenueData(range);
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        if (revenueChart) revenueChart.destroy();
+        revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.map(item => new Date(item.date).toLocaleDateString()),
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: data.map(item => item.amount),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    async function renderTopProductsChart(range) {
+        const data = await fetchTopProducts(range);
+        const ctx = document.getElementById('topProductsChart').getContext('2d');
+        if (topProductsChart) topProductsChart.destroy();
+        topProductsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(item => item.name),
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: data.map(item => item.revenue),
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const revenueRange = document.getElementById('revenueRange');
+        const topProductsRange = document.getElementById('topProductsRange');
+
+        renderRevenueChart(revenueRange.value);
+        renderTopProductsChart(topProductsRange.value);
+
+        revenueRange.addEventListener('change', () => {
+            renderRevenueChart(revenueRange.value);
+        });
+
+        topProductsRange.addEventListener('change', () => {
+            renderTopProductsChart(topProductsRange.value);
+        });
+    });
+</script>
+
+</body>
+</html>
