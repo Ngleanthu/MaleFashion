@@ -13,6 +13,8 @@ router.get('/forgotpassword', authController.getForgotPassword);
 
 router.get('/profile', authController.getProfile);
 
+router.post('/profile/update', authController.updateUser);
+
 router.get('/logout', authController.getLogout);  // Đăng xuất
 
 // router.get('/verify-email/:token', authController.verifyEmail);

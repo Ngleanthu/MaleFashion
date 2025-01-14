@@ -1,5 +1,9 @@
 <%- include('../includes/header') %>
 <title>Profile | Male-Fashion</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
     <%- include('../includes/navigation') %>
@@ -22,47 +26,174 @@
     <!-- Breadcrumb Section End -->
 
     <!-- Profile Info Section Begin -->
-    <section class="profile-info spad">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 text-center">
-                    <div class="profile-info__item">
-                        <!-- Profile Picture -->
-                         
-                        <img src="<%= user.profilePic || '/img/avatar-default.png' %>" 
-                        alt="Profile Picture" 
-                        class="profile-info__image" 
-                        style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;">
-
-                    </div>
-                    <div class="profile-info__item">
-                        <h5>Fullname: <%= user.fullname %></h5>
-                    </div>
-                    <div class="profile-info__item">
-                        <h5>Email: <%= user.email %></h5>
-                    </div>
-                    <div class="profile-info__item">
-                        <h5>Username: <%= user.username %></h5>
-                    </div>                
-                    <!-- Password Section -->
-                    <div class="profile-info__item">
-                        <h5>Password: ********</h5>
-                    </div>
-
-                    <!-- Edit Profile Button -->
-                    <button class="primary-btn" data-toggle="modal" data-target="#editProfileModal">Edit Profile</button>
+    <!-- Profile Info Section -->
+<section class="profile-info spad">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <div class="profile-info__item">
+                    <!-- Profile Picture -->
+                    <img src="<%= user.profilePic || '/img/avatar-default.png' %>" 
+                    alt="Profile Picture" 
+                    class="profile-info__image" 
+                    style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;">
                 </div>
+                <div class="profile-info__item">
+                    <h5>Fullname: <%= user.fullname %></h5>
+                </div>
+                <div class="profile-info__item">
+                    <h5>Email: <%= user.email %></h5>
+                </div>
+                <div class="profile-info__item">
+                    <h5>Username: <%= user.username %></h5>
+                </div>
+                <!-- Password Section -->
+                <div class="profile-info__item">
+                    <h5>Password: ********</h5>
+                </div>
+                <!-- Edit Profile Button -->
+                <button class="primary-btn" data-toggle="modal" data-target="#editProfileModal">Edit Profile</button>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editProfileForm" action="/profile/update" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <div class="modal-body">
+                    <input type="text" style="display: none;" id="userId" value="<%= user._id %>"/>
+                    <!-- Fullname -->
+                    <div class="form-group">
+                        <label for="fullname">Fullname</label>
+                        <input type="text" class="form-control" id="fullname" name="fullname" value="<%= user.fullname %>" required>
+                        <small id="fullnameError" class="form-text text-danger" style="display: none;">Fullname is required.</small>
+                    </div>
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+                        <small id="emailError" class="form-text text-danger" style="display: none;">Please enter a valid email address.</small>
+                    </div>
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required>
+                        <small id="usernameError" class="form-text text-danger" style="display: none;">Username is required and should be at least 3 characters long.</small>
+                    </div>
+                    <!-- Profile Picture -->
+                    <div class="form-group">
+                        <label for="profilePic">Profile Picture</label>
+                        <input type="file" class="form-control-file" id="profilePic" name="profilePic">
+                    </div>
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">New Password</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                        <small id="passwordError" class="form-text text-danger" style="display: none;">Password must be at least 6 characters long.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                        <small id="confirmPasswordError" class="form-text text-danger" style="display: none;">Passwords do not match.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     <!-- Profile Info Section End -->
-
-    
-
     <%- include('../includes/footer') %>
-
     <!-- Include Bootstrap JS for modal functionality -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function validateForm() {
+            // Reset error messages
+            document.getElementById('fullnameError').style.display = 'none';
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('usernameError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('confirmPasswordError').style.display = 'none';
+    
+            // Validate Fullname
+            var fullname = document.getElementById('fullname').value;
+            if (!fullname) {
+                document.getElementById('fullnameError').style.display = 'block';
+                return false;
+            }
+    
+            // Validate Email
+            var email = document.getElementById('email').value;
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!email || !emailPattern.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                return false;
+            }
+    
+            // Validate Username
+            var username = document.getElementById('username').value;
+            if (!username || username.length < 3) {
+                document.getElementById('usernameError').style.display = 'block';
+                return false;
+            }
+    
+            // Validate Password (only if provided)
+            var password = document.getElementById('password').value;
+            if (password && password.length < 6) {
+                document.getElementById('passwordError').style.display = 'block';
+                return false;
+            }
+    
+            // Confirm Password
+            var confirmPassword = document.getElementById('confirmPassword').value;
+            if (password && confirmPassword !== password) {
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                return false;
+            }
+    
+            return true; // Form is valid
+        }
+        $('#editProfileForm').submit(function (e) {
+        e.preventDefault(); // Ngừng hành động submit mặc định
+
+        if (!validateForm()) {
+            return; // Nếu form không hợp lệ thì không gửi
+        }
+
+        var formData = new FormData(this); // Lấy dữ liệu từ form
+        let userId = document.getElementById('userId').value;
+        if (userId) {
+            formData.append('userId', userId);  // Thêm userId vào formData
+        }
+        $.ajax({
+            url: '/profile/update',  // URL gửi yêu cầu
+            type: 'POST',            // Phương thức gửi dữ liệu
+            data: formData,          // Dữ liệu gửi lên server
+            contentType: false,      // Không gửi content-type vì đang dùng FormData
+            processData: false,      // Không cần xử lý dữ liệu
+            success: function (response) {
+                alert('Profile updated successfully!');
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                alert('An error occurred while updating your profile.');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
