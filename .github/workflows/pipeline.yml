@@ -26,5 +26,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Compile project
+        run: npm run compile
+
       - name: Build project
         run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: build/

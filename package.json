@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "build": "echo 'No build step needed'"
+    "compile": "tsc",
+    "build": "npm run compile && echo 'Build step completed'"
   },
   "author": "ngleanthu",
   "license": "ISC",
