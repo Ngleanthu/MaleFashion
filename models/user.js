@@ -82,9 +82,15 @@ userSchema.methods.removeFromCart = function (productId) {
         return item.productId.toString() !== productId.toString();
     });
     this.cart.items = updatedCartItems;
-    return this.save(); // Gọi save() để lưu và trả về Promise
+    return this.save();
 };
-
+userSchema.methods.updateItem = function (product, quantity) {
+    const cartItemIndex = this.cart.items.findIndex(item => item._id.toString() == product.toString());
+    if (cartItemIndex !== -1) {
+    this.cart.items[cartItemIndex].quantity = quantity;
+    }
+    return this.save();
+};
 userSchema.methods.clearCart = function() {
     this.cart = { item: [] };
     return this.save();

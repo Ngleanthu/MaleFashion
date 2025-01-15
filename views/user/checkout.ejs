@@ -128,7 +128,7 @@
                                             subtotal += totalPrice;  // Cộng dồn vào subtotal
                                         %>
                                             <li>
-                                                <%= p.productId.title %> <span><%= new Intl.NumberFormat('vi-VN').format(totalPrice* 1000) %> ₫</span> <!-- Hiển thị tiêu đề sản phẩm và tổng tiền của sản phẩm -->
+                                                <%= p.productId.title %> x <%= p.quantity %> <span><%= new Intl.NumberFormat('vi-VN').format(totalPrice* 1000) %> ₫</span> <!-- Hiển thị tiêu đề sản phẩm và tổng tiền của sản phẩm -->
                                             </li>
                                         <% } %>
                                     </ul>

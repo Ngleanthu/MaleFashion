@@ -175,19 +175,22 @@
     proQty.prepend('<span class="fa fa-angle-left dec qtybtn"></span>');
     proQty.append('<span class="fa fa-angle-right inc qtybtn"></span>');
     proQty.on('click', '.qtybtn', function () {
-        var $button = $(this);
-        var oldValue = $button.parent().find('input').val();
+        let $button = $(this);
+        let oldValue = $button.parent().find('input').val();
+        let productId = $button.parent().find('input').data('id'); 
+        let newVal;
         if ($button.hasClass('inc')) {
-            var newVal = parseFloat(oldValue) + 1;
+            newVal = parseFloat(oldValue) + 1;
         } else {
             // Don't allow decrementing below zero
             if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
+                newVal = parseFloat(oldValue) - 1;
             } else {
                 newVal = 0;
             }
         }
-        $button.parent().find('input').val(newVal);
+
+        sendAjaxRequest(productId, newVal)
     });
 
     /*------------------
@@ -207,74 +210,59 @@
 
 })(jQuery);
 
+async function sendAjaxRequest(id, value) {
+    try {
+        const params = new URLSearchParams({
+            productId: id,  // ID sản phẩm
+            quantity: value  // Số lượng sản phẩm mới
+        });
+        
+        const response = await fetch(`/shopping-cart/update?${params}`, {
+            method: 'GET',  // Sử dụng GET request
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log('aaaa')
+        if (!response.ok) {
+            throw new Error('Lỗi từ server');
+        }
+
+        const html = await response.text();
+        updateDOM(html);
+    } catch (error) {
+        console.error('Lỗi khi gửi yêu cầu AJAX:', error);
+    }
+}
+
+function updateDOM(html) {
+    try {
+    const elements = {
+        total: document.getElementById('total'),
+        priceProducts: document.getElementsByName('priceProduct'), // Đổi tên biến cho hợp lý
+        quantityProducts: document.getElementsByName('quantityProduct') // Đổi tên biến cho hợp lý
+    };
+    console.log('HTML received:', html);
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+    const newTotal = doc.querySelector('#total');
+        elements.total.innerHTML = newTotal.innerHTML;
+
+    const newPriceProducts = doc.getElementsByName('priceProduct');
+        newPriceProducts.forEach((newElement, index) => {
+            elements.priceProducts[index].innerHTML = newElement.innerHTML;
+        });
+
+    const newQuantityProducts = doc.getElementsByName('quantityProduct');
+        newQuantityProducts.forEach((newElement, index) => {
+            elements.quantityProducts[index].innerHTML = newElement.innerHTML;
+        });
+    } catch (error) {
+        console.error('Error updating DOM:', error);
+    }
+}
+
 
 function submitForm() {
-    document.getElementById('addToCartForm').submit();  // Gửi form khi nhấn vào thẻ <a>
-}
-
-document.querySelectorAll('.quantity-input').forEach(input => {
-input.addEventListener('input', function() {
-    updateElementOrder(input, null);  // Truyền input và kiểu sự kiện 'input'
-});
-});
-
-document.querySelectorAll('.qtybtn').forEach(button => {
-button.addEventListener('click', function() {
-    let change;
-    const input = this.closest('tr').querySelector('.quantity-input');  // Tìm input quantity trong cùng một dòng
-    if (this.classList.contains('fa-angle-right')) {
-        change = 'inc';
-    } else if (this.classList.contains('fa-angle-left')) {
-        change = 'dec';
-    }
-
-    updateElementOrder(input, change);  // Truyền input và kiểu change ('inc' hoặc 'dec')
-});
-});
-
-function updateElementOrder(input, change) {
-const productId = input.dataset.id;  // Lấy ID sản phẩm từ input
-let quantity = parseInt(input.value);  // Lấy số lượng mới từ input
-let newQuantity;
-
-if (isNaN(quantity)) {
-    quantity = 1;
-}
-
-if (change === 'inc') {
-    newQuantity = quantity + 1;
-} else if (change === 'dec') {
-    newQuantity = quantity - 1;
-} else {
-    newQuantity = quantity;
-}
-
-if (newQuantity <= 1) {
-    newQuantity = 1;
-    input.value = 1;
-}
-
-const productPrice = parseFloat(input.dataset.price); 
-const newTotal = newQuantity * productPrice;
-const totalElement = document.getElementById(`total-${productId}`);
-if (totalElement) {
-    totalElement.textContent = new Intl.NumberFormat('vi-VN').format(newTotal * 1000) + ' ₫';
-}
-
-calcSubTotal();
-}
-
-function calcSubTotal() {
-let subTotal = 0;
-document.querySelectorAll(".cart__price").forEach(e => {
-    const priceText = e.textContent.replace(/[^\d]/g, '');
-    const price = parseInt(priceText);
-    if (!isNaN(price)) {
-        subTotal += price / 1000; 
-    }
-});
-
-document.querySelectorAll('.cart__total li span').forEach(e => {
-    e.textContent = new Intl.NumberFormat('vi-VN').format(subTotal * 1000) + ' ₫';
-})
+    document.getElementById('addToCartForm').submit();
 }

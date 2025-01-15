@@ -43,20 +43,6 @@ exports.getAllOrders = (req, res, next) => {
         res.status(500).send('Error fetching users');
     });
 };
-exports.getAllUsers = (req, res, next) => {
-    User.find()
-    .then(users => {
-        res.render('admin/manage-users', {
-            isAuthenticated: req.session.isLoggedIn,
-            users: users,
-            path: '/manage-users',  // Truyền biến 'path' vào view
-        });
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).send('Error fetching users');
-    });
-};
 
 exports.postAddProducts = (req, res, next) => {
     const title = req.body.title;
@@ -113,6 +99,7 @@ exports.getAllUsers = (req, res, next) => {
             res.status(500).send('Error fetching users');
         });
 };
+
 exports.getAllProducts = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
     let limit = 2; 
@@ -160,7 +147,6 @@ exports.getEditProduct = (req, res, next) => {
       });
 };
 
-// Cập nhật thông tin sản phẩm khi người dùng gửi form
 exports.postEditProduct = async (req, res, next) => {
     const productId = req.params.id; // Sử dụng id trong URL
     const updatedData = {
@@ -270,7 +256,6 @@ exports.filterProducts = (req, res, next) => {
             res.status(500).send('Error fetching products');
         });
 };
-
 
 exports.getDashboardStats = async (req, res) => {
     try {
@@ -470,6 +455,44 @@ exports.updateStatusOrder = async (req, res) => {
       res.status(500).render('admin/manage-orders', {
         message: 'Đã xảy ra lỗi khi tải sản phẩm.',
         path: '/manage-orders',
+      });
+    }
+};
+
+exports.updateStatusAccount = async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        console.log("user not found");
+        return res.status(404).render('admin/manage-users', {
+          message: 'Tài khoản không tồn tại.',
+          path: '/manage-users',
+        });
+      }
+  
+      let currentStatus = user.status;
+      if (currentStatus == 0) {
+        user.status = 1;
+      } else if (currentStatus === 1) {
+        user.status = 0;
+      } else {
+        return res.status(500).render('admin/manage-users', {
+          message: 'Đã xảy ra lỗi khi cập nhật trạng thái tài khoản.',
+          path: '/manage-users',
+        });
+      }
+  
+      await user.save();
+
+      exports.getAllUsers(req, res);
+  
+    } catch (err) {
+      console.log("Error:", err);
+      res.status(500).render('admin/manage-users', {
+        message: 'Đã xảy ra lỗi khi tài khoản.',
+        path: '/manage-users',
       });
     }
 };

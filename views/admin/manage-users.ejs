@@ -97,7 +97,7 @@
                                         class="bg-blue-500 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-md shadow">
                                         View Details
                                     </button>   
-                                    <form action="/admin/manage-users/<%= user._id %>/ban" method="POST">
+                                    <form action="/admin/manage-users/update/<%= user._id %>" method="GET">
                                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded-md shadow">
                                             <%= user.status === 1 ? "Ban" : "Unban" %>
                                         </button>
@@ -109,7 +109,6 @@
                             <div class="bg-white p-6 rounded-lg shadow-lg">
                                 <h2 class="text-2xl font-semibold">User Account Details</h2>
                                 <div id="modalContent_<%= user._id %>">
-                                    <!-- Render thông tin tài khoản người dùng -->
                                     <p><strong>User ID:</strong> <%= user._id %></p>
                                     <p><strong>FullName:</strong> <%= user.fullname %></p>
                                     <p><strong>Username</strong>:</strong> <%= user.username %></p>

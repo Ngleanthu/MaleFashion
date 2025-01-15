@@ -1,5 +1,6 @@
 const Product = require("../models/products");
 const Order = require("../models/order");
+const mongoose = require("mongoose");
 exports.getAllProducts = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
     let limit = 2; 
@@ -99,6 +100,59 @@ exports.postCartDeleteProduct = (req, res, next) => {
         console.log(err);
     });
 
+};
+
+exports.postCartUpdateProduct = (req, res, next) => {
+    let prodId = req.query.productId; // Lấy từ query string
+    let quantity = parseInt(req.query.quantity); // Lấy từ query string
+    let user = req.user; // user được lấy từ middleware (nếu có)
+
+
+    if (quantity === 0) {
+        try {
+            user.removeFromCart(prodId)
+                .then(updatedUser => {
+                    return updatedUser.populate("cart.items.productId");
+                })
+                .then(updatedUser => {
+                    // Once population is done, render the updated cart
+                    const products = updatedUser.cart.items;
+                    res.render("user/shopping-cart", {
+                        path: "/shopping-cart",
+                        products: products,
+                        isAuthenticated: req.session.isLoggedIn
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (err) {
+            console.error(err);
+            res.status(500).redirect("/shopping-cart");
+        }
+    } else {
+        try {
+            user.updateItem(prodId, quantity)
+            .then(updatedUser => {
+                return updatedUser.populate("cart.items.productId");
+            })
+            .then(updatedUser => {
+                const products = updatedUser.cart.items;
+                res.render("user/shopping-cart", {
+                    path: "/shopping-cart",
+                    products: products,
+                    isAuthenticated: req.session.isLoggedIn
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+                } catch (err) {
+                    console.error(err);
+                    res.status(500).redirect("/shopping-cart");
+                }
+            }
+    
 };
 
 exports.getCheckoutProduct = (req, res, next) => {
@@ -219,7 +273,6 @@ exports.getOrderDetails = (req, res, next) => {
             res.redirect("user/order");
         });
 };
-
 
 exports.filterProducts = async (req, res) => {
     const ensureArray = (value) => value ? (Array.isArray(value) ? value : value.split(',')) : [];

@@ -13,6 +13,7 @@ router.post('/manage-products/delete-product/:id', adminController.postDeletePro
 // router.post('/manage-users', adminController.postAllUsers);
 router.get('/manage-users', adminController.getAllUsers);
 router.get('/manage-orders/update/:id', adminController.updateStatusOrder);
+router.get('/manage-users/update/:id', adminController.updateStatusAccount);
 router.get('/filterUser', adminController.filterAccountByAdmin);
 router.get('/filterOrder', adminController.filterOrder);
 

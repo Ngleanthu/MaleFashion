@@ -27,7 +27,6 @@
         <section class="shopping-cart spad">
             <div class="container">
                 <div class="row">
-                    
                     <div class="col-lg-8">
                         <div class="shopping__cart__table">
                             <table>
@@ -60,11 +59,13 @@
                                         <td class="quantity__item">
                                             <div class="quantity">
                                                 <div class="pro-qty-2">
-                                                    <input type="number" class="quantity-input" data-price="<%= p.productId.price %>" data-id="<%= p._id %>" value="<%= p.quantity %>" min="0">
+                                                    <span name="quantityProduct">
+                                                        <input type="number" class="quantity-input" data-price="<%= p.productId.price %>" data-id="<%= p._id %>" value="<%= p.quantity %>" min="0" readonly>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="cart__price" id="total-<%= p._id %>">
+                                        <td name="priceProduct" class="cart__price" id="total-<%= p._id %>">
                                             <%= new Intl.NumberFormat('vi-VN').format((p.productId.price * p.quantity) * 1000) %> ₫
                                         </td>                                
                                         <td class="cart__close">
@@ -92,29 +93,15 @@
                                     <a href="/shop">Continue Shopping</a>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="continue__btn update__btn">
-                                    <a href="/shopping-cart/update-cart"><i class="fa fa-spinner"></i> Update cart</a>
-                                </div>
-                            </div>
                             
                         </div>
                     </div>
                 
                     <div class="col-lg-4">
-                        <!-- <div class="cart__discount">
-                            <h6>Discount codes</h6>
-                            <form action="#">
-                                <input type="text" placeholder="Coupon code">
-                                <button type="submit">Apply</button>
-                            </form>
-                        </div> -->
                         <div class="cart__total">
                             <h6>Cart total</h6>
-                            <ul>
-                                
+                            <ul id="total">
                                 <li>Subtotal <span><%= new Intl.NumberFormat('vi-VN').format(subtotal * 1000) %> ₫</span></li>
-                                <!-- Tính total nếu có giảm giá hoặc các chi phí khác -->
                                 <li>Total <span><%= new Intl.NumberFormat('vi-VN').format(subtotal * 1000) %> ₫</span></li>
                             </ul>
                             <a href="/checkout" class="primary-btn">Proceed to checkout</a>
@@ -124,8 +111,6 @@
                 </div>
             </div>
         </section>
-    <!-- Shopping Cart Section End -->
     <%- include('../includes/footer') %>
 </body>
-
 </html>
