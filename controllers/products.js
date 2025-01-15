@@ -2,7 +2,7 @@ const Product = require("../models/products");
 const Order = require("../models/order");
 exports.getAllProducts = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
-    let limit = 2; 
+    let limit = 6; 
 
     Product.find()
         .then((products) => {

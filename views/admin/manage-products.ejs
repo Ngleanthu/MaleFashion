@@ -15,7 +15,7 @@
                 <button id="closeAddProductModal" class="text-gray-500 hover:text-gray-700">✖</button>
             </div>
             <div class="p-4">
-                <form id="addProductForm" method="POST" action="/manage-products">
+                <form id="addProductForm" method="POST" action="/admin/manage-products">
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Tên sản phẩm -->
                         <div>
@@ -290,40 +290,67 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const openModalButton = document.getElementById('openAddProductModal');
-    const closeModalButton = document.getElementById('closeAddProductModal');
-    const addProductModal = document.getElementById('addProductModal');
-    const cancelAddProduct = document.getElementById('cancelAddProduct');
+        const openModalButton = document.getElementById('openAddProductModal');
+        const closeModalButton = document.getElementById('closeAddProductModal');
+        const addProductModal = document.getElementById('addProductModal');
+        const cancelAddProduct = document.getElementById('cancelAddProduct');
+        const addProductForm = document.getElementById('addProductForm');
 
-    // Open modal when "Thêm sản phẩm" button is clicked
-    openModalButton.addEventListener('click', function() {
-        addProductModal.classList.remove('hidden'); // Make the modal visible
-    });
+        // Open modal when "Thêm sản phẩm" button is clicked
+        openModalButton.addEventListener('click', function() {
+            addProductModal.classList.remove('hidden'); // Make the modal visible
+        });
 
-    // Close modal when "✖" button is clicked
-    closeModalButton.addEventListener('click', function() {
-        addProductModal.classList.add('hidden'); // Hide the modal
-    });
+        // Close modal when "✖" button is clicked
+        closeModalButton.addEventListener('click', function() {
+            addProductModal.classList.add('hidden'); // Hide the modal
+        });
 
-    // Close modal when "Hủy" button is clicked
-    cancelAddProduct.addEventListener('click', function() {
-        addProductModal.classList.add('hidden'); // Hide the modal
-    });
+        // Close modal when "Hủy" button is clicked
+        cancelAddProduct.addEventListener('click', function() {
+            addProductModal.classList.add('hidden'); // Hide the modal
+        });
 
-    // Close modal when clicking outside of the modal (on the overlay)
-    addProductModal.addEventListener('click', function(event) {
-        if (event.target === addProductModal) {
-            addProductModal.classList.add('hidden');
-        }
+        // Close modal when clicking outside of the modal (on the overlay)
+        addProductModal.addEventListener('click', function(event) {
+            if (event.target === addProductModal) {
+                addProductModal.classList.add('hidden');
+            }
+        });
+
+        // Form validation
+        addProductForm.addEventListener('submit', function(event) {
+            let isValid = true;
+            const fields = ["title", "imgUrl", "description", "price", "color", "category", "size", "brand", "tags", "amount"];
+            
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add("border-red-500"); // Highlight input with red border
+                    input.nextElementSibling?.remove(); // Remove old error message if any
+                    const error = document.createElement("p");
+                    error.textContent = "This field is required";
+                    error.classList.add("text-red-500", "text-sm", "mt-1");
+                    input.after(error);
+                } else {
+                    input.classList.remove("border-red-500"); // Remove red border
+                    input.nextElementSibling?.remove(); // Remove old error message
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
     });
-});
 
 let currentPage = 1;
 const ITEMS_PER_PAGE = 2;
 
 const elements = {
     category: document.getElementById('filterCategory'),
-    branch: document.getElementById('filterBrand'),
+    brand: document.getElementById('filterBrand'),
     search: document.getElementById('searchTitle'),
     status: document.getElementById('filterStatus'),
     tags: document.getElementById('filterTags'),
@@ -345,7 +372,7 @@ function setupPaginationListener() {
 
 function setupFilterListeners() {
     elements.category.addEventListener('change', () => sendAjaxRequest());
-    elements.branch.addEventListener('change', () => sendAjaxRequest());
+    elements.brand.addEventListener('change', () => sendAjaxRequest());
     elements.tags.addEventListener('change', () => sendAjaxRequest());
     elements.sort.addEventListener('change', () => sendAjaxRequest());
     elements.search.addEventListener('input', debounce(() => sendAjaxRequest(), 300));
@@ -400,7 +427,7 @@ function getFilterData() {
     const params = new URLSearchParams();
 
     if (elements.category.value) params.append('category', elements.category.value);
-    if (elements.branch.value) params.append('branch', elements.branch.value);
+    if (elements.brand.value) params.append('brand', elements.brand.value);
     if (elements.tags.value) params.append('tags', elements.tags.value);
     if (elements.status.value) params.append('status', elements.status.value);
     if (elements.sort.value) params.append('sort', elements.sort.value);
