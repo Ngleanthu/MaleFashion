@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: CI/CD
 
 on:
   push:
@@ -25,9 +25,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Compile project
-        run: npm run compile
 
       - name: Build project
         run: npm run build
