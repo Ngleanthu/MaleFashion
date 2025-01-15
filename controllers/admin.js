@@ -5,6 +5,40 @@ exports.dashboard = (req, res, next) => {
     res.render('admin/dashboard', {path: 'admin/dashboard'});
 }
 
+exports.postAddProducts = (req, res, next) => {
+    const title = req.body.title;
+    const imgUrl = req.body.imgUrl;
+    const description = req.body.description;
+    const price = req.body.price;
+    const color = req.body.color;
+    const category = req.body.category;
+    const size = req.body.size;
+    const brand = req.body.brand;
+    const tags = req.body.tags;
+    const amount = req.body.amount;    
+    const product = new Product({
+        title: title,
+        imgUrl: imgUrl,
+        description: description,
+        price: price,
+        color: color,
+        category: category,
+        size: size,
+        brand: brand,
+        tags: tags,
+        amount: amount,
+        userId: req.user
+    })
+    console.log(req.user);
+    product.save()
+        .then(result => {
+            console.log("11111"),
+            res.redirect('/admin/manage-products');
+        })
+        .catch(err => {
+            console.error(err);
+        });
+};
 exports.getOrderDetails = (req, res, next) => {
     const orderId = req.params.id;      
     Order.findById(orderId)
@@ -44,39 +78,6 @@ exports.getAllOrders = (req, res, next) => {
     });
 };
 
-exports.postAddProducts = (req, res, next) => {
-    const title = req.body.title;
-    const imgUrl = req.body.imgUrl;
-    const description = req.bodyx.description;
-    const price = req.body.price;
-    const color = req.body.color;
-    const category = req.body.category;
-    const size = req.body.size;
-    const brand = req.body.brand;
-    const tags = req.body.tags;
-    const amount = req.body.amount;    
-    const product = new Product({
-        title: title,
-        imgUrl: imgUrl,
-        description: description,
-        price: price,
-        color: color,
-        category: category,
-        size: size,
-        brand: brand,
-        tags: tags,
-        amount: amount,
-        userId: req.user
-    })
-    product.save()
-        .then(result => {
-            console.log('Product saved!');
-            res.redirect('/manage-products');
-        })
-        .catch(err => {
-            console.error(err);
-        });
-};
 
 exports.getAllUsers = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
@@ -102,7 +103,7 @@ exports.getAllUsers = (req, res, next) => {
 
 exports.getAllProducts = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
-    let limit = 2; 
+    let limit = 4; 
     Product.find()  // Sử dụng phương thức fetchAll trong model Product
         .then(products => {
             res.render('admin/manage-products', {

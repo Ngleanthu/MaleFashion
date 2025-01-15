@@ -3,7 +3,7 @@ const Order = require("../models/order");
 const mongoose = require("mongoose");
 exports.getAllProducts = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
-    let limit = 2; 
+    let limit = 6; 
 
     Product.find()
         .then((products) => {
