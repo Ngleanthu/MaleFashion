@@ -40,6 +40,7 @@ exports.postAddProducts = (req, res, next) => {
             console.error(err);
         });
 };
+
 exports.getOrderDetails = (req, res, next) => {
     const orderId = req.params.id;      
     Order.findById(orderId)
@@ -58,6 +59,7 @@ exports.getOrderDetails = (req, res, next) => {
             res.status(500).send('Error fetching order details');
         });
 };
+
 exports.getAllOrders = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
     let limit = 2; 
@@ -502,8 +504,20 @@ exports.updateStatusOrder = async (req, res) => {
 
 exports.updateStatusAccount = async (req, res) => {
     try {
-      const userId = req.params.id;
+        if (!req.isAuthenticated()) {
+            return res.redirect('/signin');
+        }
+    
+        const admin = req.user;
+        const userId = req.params.id;
+
+      if (admin._id.equals(userId)) {
+        return res.status(403).send(
+            'Bạn không có quyền thay đổi trạng thái tài khoản của chính mình.'
+        );
+    }
       const user = await User.findById(userId);
+
   
       if (!user) {
         console.log("user not found");
