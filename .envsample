@@ -1,7 +1,7 @@
 MONGO_URI=mongodb+srv://ngleanthu:ngleanthu@cluster0.jxr73.mongodb.net/test?retryWrites=true&w=majority
 SESSION_SECRET=ngleanthu
 ADMIN_KEY=38yejdqw$
-
+API_KEY
 npm i 
 npm install --save-dev nodemon
 npm install --save express

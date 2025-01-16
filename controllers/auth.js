@@ -1,3 +1,4 @@
+require('dotenv').config();
 const User = require("../models/user");
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -5,9 +6,11 @@ const passport = require('passport');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport')
 
+
+const API_KEY = process.env.API_KEY;
 const transporter = nodemailer.createTransport(sendgridTransport({
     auth: {
-        api_key: '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' 
+        api_key: API_KEY
     }
 })
 );

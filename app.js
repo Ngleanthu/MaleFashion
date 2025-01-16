@@ -20,6 +20,7 @@ const MONGO_URI = process.env.MONGO_URI;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
 
+
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
