@@ -60,6 +60,11 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/signin');
+    }
+    
+
     const prodId = req.body.productId;
     Product.findById(prodId)
         .then((product) => {
@@ -239,7 +244,7 @@ exports.getOrder = (req, res, next) => {
     if (!req.user) {
         return res.redirect('/signin'); 
     }
-    Order.find({"user.userId": req.user._id})
+    Order.find({"user.userId": req.user._id}).sort({createdDate: -1})
         .then(orders => {
             res.render("user/order", {
                 path: "/order",

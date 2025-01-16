@@ -199,23 +199,28 @@ exports.postLogout = (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const fullname = req.body.fullname;
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
+    const fullname = req.body.formData.fullname;
+    const username = req.body.formData.username;
+    const email = req.body.formData.email;
+    const password = req.body.formData.password;
+    console.log('1' + fullname)
+    console.log('1' + username)
+    console.log('1' + email)
+    console.log('1' + password)
 
+    console.log("phai id khong? " + req.user._id)
     try {
         const user = await User.findById(req.user._id);
+        console.log("find ra khong??? " + req.user)
+
         if (!user) {
             return res.status(404).json({ message: 'User not found!' });
         }
 
-        // Cập nhật các trường thông tin người dùng
         if (fullname) user.fullname = fullname;
         if (username) user.username = username;
         if (email) user.email = email;
 
-        // Nếu có mật khẩu mới, mã hóa và cập nhật
         if (password) {
             const hashedPassword = await bcrypt.hash(password, 12); // Mã hóa password
             user.password = hashedPassword;
