@@ -199,19 +199,10 @@ exports.postLogout = (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const fullname = req.body.formData.fullname;
-    const username = req.body.formData.username;
-    const email = req.body.formData.email;
-    const password = req.body.formData.password;
-    console.log('1' + fullname)
-    console.log('1' + username)
-    console.log('1' + email)
-    console.log('1' + password)
+    const { fullname, email, username, password } = req.body;
 
-    console.log("phai id khong? " + req.user._id)
     try {
         const user = await User.findById(req.user._id);
-        console.log("find ra khong??? " + req.user)
 
         if (!user) {
             return res.status(404).json({ message: 'User not found!' });
@@ -222,26 +213,19 @@ exports.updateUser = async (req, res) => {
         if (email) user.email = email;
 
         if (password) {
-            const hashedPassword = await bcrypt.hash(password, 12); // Mã hóa password
+            const hashedPassword = await bcrypt.hash(password, 12); 
             user.password = hashedPassword;
         }
 
-        // Lưu thay đổi vào cơ sở dữ liệu
         await user.save();
 
-        // Render lại view profile với thông tin người dùng đã cập nhật
-        return res.render('user/profile', { 
-            user: user,  // Trả về dữ liệu người dùng đã được cập nhật
-            message: 'Profile updated successfully', // Thông báo thành công
-            path: '/profile'  // Để có thể highlight menu nếu cần
-        });
+        return res.redirect('/profile');
 
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Server error' });
     }
 };
-
 
 //GET profile
 exports.getProfile = (req, res) => {

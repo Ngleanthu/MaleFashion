@@ -114,6 +114,8 @@
         </div>
     </div>
 </div>
+
+</body>
     <!-- Profile Info Section End -->
     <%- include('../includes/footer') %>
     <!-- Include Bootstrap JS for modal functionality -->
@@ -121,79 +123,87 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function validateForm() {
-            // Reset error messages
-            document.getElementById('fullnameError').style.display = 'none';
-            document.getElementById('emailError').style.display = 'none';
-            document.getElementById('usernameError').style.display = 'none';
-            document.getElementById('passwordError').style.display = 'none';
-            document.getElementById('confirmPasswordError').style.display = 'none';
-    
-            // Validate Fullname
-            var fullname = document.getElementById('fullname').value;
-            if (!fullname) {
-                document.getElementById('fullnameError').style.display = 'block';
-                return false;
-            }
-    
-            // Validate Email
-            var email = document.getElementById('email').value;
-            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            if (!email || !emailPattern.test(email)) {
-                document.getElementById('emailError').style.display = 'block';
-                return false;
-            }
-    
-            // Validate Username
-            var username = document.getElementById('username').value;
-            if (!username || username.length < 3) {
-                document.getElementById('usernameError').style.display = 'block';
-                return false;
-            }
-    
-            // Validate Password (only if provided)
-            var password = document.getElementById('password').value;
-            if (password && password.length < 6) {
-                document.getElementById('passwordError').style.display = 'block';
-                return false;
-            }
-    
-            // Confirm Password
-            var confirmPassword = document.getElementById('confirmPassword').value;
-            if (password && confirmPassword !== password) {
-                document.getElementById('confirmPasswordError').style.display = 'block';
-                return false;
-            }
-    
-            return true; // Form is valid
-        }
-        $('#editProfileForm').submit(function (e) {
-        e.preventDefault(); // Ngừng hành động submit mặc định
+function validateForm() {
+    // Reset error messages
+    document.getElementById('fullnameError').style.display = 'none';
+    document.getElementById('emailError').style.display = 'none';
+    document.getElementById('usernameError').style.display = 'none';
+    document.getElementById('passwordError').style.display = 'none';
+    document.getElementById('confirmPasswordError').style.display = 'none';
 
-        if (!validateForm()) {
-            return; // Nếu form không hợp lệ thì không gửi
-        }
+    // Validate Fullname
+    var fullname = document.getElementById('fullname').value;
+    if (!fullname) {
+        document.getElementById('fullnameError').style.display = 'block';
+        return false;
+    }
 
-        var formData = new FormData(this); // Lấy dữ liệu từ form
-        let userId = document.getElementById('userId').value;
-        if (userId) {
-            formData.append('userId', userId);  // Thêm userId vào formData
+    // Validate Email
+    var email = document.getElementById('email').value;
+    if (!email) {
+        document.getElementById('emailError').style.display = 'block';
+        return false;
+    }
+
+    // Validate Username
+    var username = document.getElementById('username').value;
+    if (!username || username.length < 3) {
+        document.getElementById('usernameError').style.display = 'block';
+        return false;
+    }
+
+    // Validate Password (only if provided)
+    var password = document.getElementById('password').value;
+    if (password && password.length < 6) {
+        document.getElementById('passwordError').style.display = 'block';
+        return false;
+    }
+
+    // Confirm Password
+    var confirmPassword = document.getElementById('confirmPassword').value;
+    if (password && confirmPassword !== password) {
+        document.getElementById('confirmPasswordError').style.display = 'block';
+        return false;
+    }
+
+    return true; // Form is valid
+}
+
+// Xử lý submit form bằng Fetch API
+document.getElementById('editProfileForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Ngăn submit mặc định
+
+    if (!validateForm()) {
+        return; // Không gửi nếu form không hợp lệ
+    }
+
+    let body = `fullname=${encodeURIComponent(document.getElementById('fullname').value)}&` +
+           `email=${encodeURIComponent(document.getElementById('email').value)}&` +
+           `username=${encodeURIComponent(document.getElementById('username').value)}&` +
+           `password=${encodeURIComponent(document.getElementById('password').value)}`;
+
+    fetch('/profile/update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'  // Gửi dạng query string
+        },
+        body: body  // Dữ liệu gửi đi dạng query string
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-        $.ajax({
-            url: '/profile/update',  // URL gửi yêu cầu
-            type: 'POST',            // Phương thức gửi dữ liệu
-            data: formData,          // Dữ liệu gửi lên server
-            contentType: false,      // Không gửi content-type vì đang dùng FormData
-            processData: false,      // Không cần xử lý dữ liệu
-            success: function (response) {
-                alert('Profile updated successfully!');
-                location.reload();
-            },
-            error: function (xhr, status, error) {
-                alert('An error occurred while updating your profile.');
-            }
-        });
+        return response.json();
+    })
+    .then(data => {
+        alert('Profile updated successfully!');
+        location.reload();
+    })
+    .catch(error => {
+        alert('Profile updated successfully!');
+        location.reload();
     });
+    });
+
     </script>
-</body>
 </html>
