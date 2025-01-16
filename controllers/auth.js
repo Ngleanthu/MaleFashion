@@ -2,16 +2,15 @@ const User = require("../models/user");
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 // const crypto = require('crypto');
-// const nodemailer = require('nodemailer');
-// const sendgridTransport = require('nodemailer-sendgrid-transport')
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport')
 
-// const transporter = nodemailer.createTransport(sendgridTransport({
-//     auth: {
-//         api_user: ,
-//         api_key: 
-//     }
-// })
-// );
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth: {
+        api_key: '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' 
+    }
+})
+);
 
 // GET sign-in page
 exports.getSignIn = (req, res, next) => {
@@ -159,6 +158,12 @@ exports.postSignUp = (req, res, next) => {
         .then(result => {
             // Sau khi lưu người dùng thành công, chuyển hướng đến trang signin
             res.redirect('/signin');
+            return transporter.sendMail({
+                to: email,
+                from: 'malefashion@hcmus',            
+                subject: 'Signup succeeded!',
+                html: '<h1>You successfully signed up!</h1>'
+            });       
         })
         .catch(err => console.log(err));
     })
