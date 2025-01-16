@@ -78,7 +78,6 @@ exports.getAllOrders = (req, res, next) => {
     });
 };
 
-
 exports.getAllUsers = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
     let limit = 2; 
@@ -103,7 +102,7 @@ exports.getAllUsers = (req, res, next) => {
 
 exports.getAllProducts = (req, res, next) => {
     let page = req.query.page ? req.query.page : 1;
-    let limit = 4; 
+    let limit = 2; 
     Product.find()  // Sử dụng phương thức fetchAll trong model Product
         .then(products => {
             res.render('admin/manage-products', {
@@ -196,8 +195,7 @@ exports.filterProducts = (req, res, next) => {
     let tags = req.query.tags || ''; // Lọc theo tag
     let status = req.query.status || ''; // Lọc theo trạng thái (active, inactive)
     let searchTerm = req.query.search || ''; // Từ khóa tìm kiếm
-    let sortField = req.query.sortField || ''; // Sắp xếp theo trường nào (price, title...)
-    let sortType = req.query.sortType || ''; // Sắp xếp theo thứ tự ASC hoặc DESC
+    let sortType = req.query.sort || ''; // Sắp xếp theo trường nào (price, title...)
 
     // Build search query
     let query = {};
@@ -217,11 +215,8 @@ exports.filterProducts = (req, res, next) => {
         query.status = status; // Trạng thái của sản phẩm
     }
 
-    // Sorting
-    let sort = {};
-    if (sortField) {
-        sort[sortField] = sortType === 'ASC' ? 1 : -1; // Sắp xếp theo thứ tự ASC hoặc DESC
-    }
+
+    let sort = { price: sortType == 'ASC' ? 1 : -1 };
 
     Product.find(query)
         .sort(sort)
@@ -243,8 +238,7 @@ exports.filterProducts = (req, res, next) => {
                         tags: tags,
                         status: status,
                         searchTerm: searchTerm,
-                        sortField: sortField,
-                        sortType: sortType
+                        sortType: sortType,
                     });
                 })
                 .catch(err => {
