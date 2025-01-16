@@ -244,7 +244,7 @@ exports.getOrder = (req, res, next) => {
     if (!req.user) {
         return res.redirect('/signin'); 
     }
-    Order.find({"user.userId": req.user._id}).sort({createdDate: -1})
+    Order.find({"user.userId": req.user._id}).sort({createdDate: 1})
         .then(orders => {
             res.render("user/order", {
                 path: "/order",

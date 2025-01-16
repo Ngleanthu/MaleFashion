@@ -6,19 +6,16 @@
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="text-xl font-semibold text-gray-800">Tổng số người dùng</div>
             <div class="mt-4 text-4xl font-bold text-blue-600"><%= totalUsers %></div>
-            <div class="mt-2 text-sm text-gray-500">Tăng <%= userIncrease %>% so với tháng trước</div>
         </div>
         <!-- Card 2 -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="text-xl font-semibold text-gray-800">Doanh thu tháng này</div>
-            <div class="mt-4 text-4xl font-bold text-green-600">$<%= totalRevenue.toLocaleString() %></div>
-            <div class="mt-2 text-sm text-gray-500">Tăng <%= revenueIncrease %>% so với tháng trước</div>
+            <div class="mt-4 text-4xl font-bold text-green-600"><%= new Intl.NumberFormat('vi-VN').format(totalRevenue * 1000) %>₫</div>
         </div>
         <!-- Card 3 -->
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="text-xl font-semibold text-gray-800">Số đơn hàng</div>
+            <div class="text-xl font-semibold text-gray-800">Tổng số đơn hàng</div>
             <div class="mt-4 text-4xl font-bold text-yellow-600"><%= totalOrders %></div>
-            <div class="mt-2 text-sm text-gray-500">Tăng <%= orderIncrease %>% so với tháng trước</div>
         </div>
     </div>
 
@@ -76,7 +73,7 @@
         revenueChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.map(item => new Date(item.date).toLocaleDateString()),
+                labels: data.map(item => item.date),
                 datasets: [{
                     label: 'Doanh thu',
                     data: data.map(item => item.amount),

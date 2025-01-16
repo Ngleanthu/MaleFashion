@@ -1,6 +1,7 @@
 const Product = require('../models/products');
 const User = require('../models/user');
 const Order = require('../models/order');
+const moment = require('moment');
 exports.dashboard = (req, res, next) => {
     res.render('admin/dashboard', {path: 'admin/dashboard'});
 }
@@ -269,9 +270,6 @@ exports.getDashboardStats = async (req, res) => {
             totalUsers,
             totalOrders,
             totalRevenue,
-            revenueIncrease: 10,  // Giả sử tăng 10%
-            userIncrease: 5,      // Giả sử tăng 5%
-            orderIncrease: 2      // Giả sử tăng 2%
         });
     } catch (error) {
         console.error(error);
@@ -286,7 +284,7 @@ exports.getRevenueReport = async (req, res) => {
 
         switch (range) {
             case 'day':
-                startDate = new Date(new Date().setDate(new Date().getDate() - 1));
+                startDate = new Date(new Date().setDate(new Date().getDate()));
                 break;
             case 'week':
                 startDate = new Date(new Date().setDate(new Date().getDate() - 7));
@@ -298,10 +296,18 @@ exports.getRevenueReport = async (req, res) => {
                 startDate = new Date(new Date().setDate(new Date().getDate() - 7));
         }
 
-        const orders = await Order.find({ createdAt: { $lte: startDate } });
+        const formattedStartDate = moment(startDate).format('DD/MM/YYYY');
+        const formattedCurDate = moment(new Date()).format('DD/MM/YYYY');
+
+        const getAllOrders = await Order.find();
+        const orders = getAllOrders.filter(order => {
+            const orderDate = order.createdAt.split(' ')[1];
+            return (compareDates(formattedStartDate, orderDate) != 1) && (compareDates(orderDate, formattedCurDate) != 1)
+        });
+
         const revenueData = orders.map(order => ({
             date: order.createdAt.split(' ')[1],
-            amount: order.products.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
+            amount: order.products.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) // Tính tổng amount
         }));
 
         res.json(revenueData);
@@ -311,14 +317,31 @@ exports.getRevenueReport = async (req, res) => {
     }
 };
 
+function compareDates(date1, date2) {
+    const [day1, month1, year1] = date1.split('/').map(Number);
+    const [day2, month2, year2] = date2.split('/').map(Number);
+
+    // Chuyển ngày, tháng, năm thành giá trị tổng thể để so sánh
+    const date1Value = new Date(year1, month1 - 1, day1); // Lưu ý tháng bắt đầu từ 0
+    const date2Value = new Date(year2, month2 - 1, day2);
+
+    if (date1Value.getTime() === date2Value.getTime()) {
+        return 0;
+    } else if (date1Value.getTime() < date2Value.getTime()) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
+
 exports.getTopProducts = async (req, res) => {
     try {
-        const { range } = req.query; // day, week, month
+        const { range } = req.query; 
         let startDate;
 
         switch (range) {
             case 'day':
-                startDate = new Date(new Date().setDate(new Date().getDate() - 1));
+                startDate = new Date(new Date().setDate(new Date().getDate()));
                 break;
             case 'week':
                 startDate = new Date(new Date().setDate(new Date().getDate() - 7));
@@ -330,12 +353,20 @@ exports.getTopProducts = async (req, res) => {
                 startDate = new Date(new Date().setDate(new Date().getDate() - 7));
         }
 
-        const orders = await Order.find({ createdAt: { $lte: startDate } });
+        const formattedStartDate = moment(startDate).format('DD/MM/YYYY');
+        const formattedCurDate = moment(new Date()).format('DD/MM/YYYY');
+
+        const getAllOrders = await Order.find();
+        const orders = getAllOrders.filter(order => {
+            const orderDate = order.createdAt.split(' ')[1];
+            return (compareDates(formattedStartDate, orderDate) != 1) && (compareDates(orderDate, formattedCurDate) != 1)
+        });
+
         const productSales = {};
 
         orders.forEach(order => {
             order.products.forEach(item => {
-                const productName = item.product.name;
+                const productName = item.product.title;
                 const revenue = item.product.price * item.quantity;
                 productSales[productName] = (productSales[productName] || 0) + revenue;
             });
