@@ -7,13 +7,13 @@ const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport')
 
 
-const API_KEY = process.env.API_KEY;
-const transporter = nodemailer.createTransport(sendgridTransport({
-    auth: {
-        api_key: API_KEY
-    }
-})
-);
+// const API_KEY = process.env.API_KEY;
+// const transporter = nodemailer.createTransport(sendgridTransport({
+//     auth: {
+//         api_key: API_KEY
+//     }
+// })
+// );
 
 // GET sign-in page
 exports.getSignIn = (req, res, next) => {
