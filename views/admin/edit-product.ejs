@@ -40,7 +40,13 @@
         <!-- Category -->
         <div class="mb-4">
             <label for="category" class="block text-gray-700 text-sm font-bold mb-2">Category:</label>
-            <input type="text" id="category" name="category" value="<%= product.category %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <select id="category" name="category" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+                <option value="Bags" <%= product.category === 'Bags' ? 'selected' : '' %>>Bags</option>
+                <option value="Clothing" <%= product.category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
+                <option value="Shoes" <%= product.category === 'Shoes' ? 'selected' : '' %>>Shoes</option>
+                <option value="Accessories" <%= product.category === 'Accessories' ? 'selected' : '' %>>Accessories</option>
+                <option value="Kids" <%= product.category === 'Kids' ? 'selected' : '' %>>Kids</option>
+            </select>
         </div>
 
         <!-- Size -->
@@ -52,13 +58,25 @@
         <!-- Brand -->
         <div class="mb-4">
             <label for="brand" class="block text-gray-700 text-sm font-bold mb-2">Brand:</label>
-            <input type="text" id="brand" name="brand" value="<%= product.brand %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <select id="brand" name="brand" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+                <option value="Louis Vuitton" <%= product.brand === 'Louis Vuitton' ? 'selected' : '' %>>Louis Vuitton</option>
+                <option value="Chanel" <%= product.brand === 'Chanel' ? 'selected' : '' %>>Chanel</option>
+                <option value="Hermes" <%= product.brand === 'Hermes' ? 'selected' : '' %>>Hermes</option>
+                <option value="Gucci" <%= product.brand === 'Gucci' ? 'selected' : '' %>>Gucci</option>
+            </select>            
         </div>
 
         <!-- Tags -->
         <div class="mb-4">
             <label for="tags" class="block text-gray-700 text-sm font-bold mb-2">Tags:</label>
-            <input type="text" id="tags" name="tags" value="<%= product.tags %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <select id="tags" name="tags" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+                <option value="Leather" <%= product.tags.includes('Leather') ? 'selected' : '' %>>Leather</option>
+                <option value="Unisex" <%= product.tags.includes('Unisex') ? 'selected' : '' %>>Unisex</option>
+                <option value="Formal" <%= product.tags.includes('Formal') ? 'selected' : '' %>>Formal</option>
+                <option value="Sport" <%= product.tags.includes('Sport') ? 'selected' : '' %>>Sport</option>
+                <option value="Handmade" <%= product.tags.includes('Handmade') ? 'selected' : '' %>>Handmade</option>
+                <option value="Casual" <%= product.tags.includes('Casual') ? 'selected' : '' %>>Casual</option>
+            </select>            
         </div>
 
         <!-- Amount -->

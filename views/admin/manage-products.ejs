@@ -49,8 +49,14 @@
                         
                         <!-- Danh mục sản phẩm -->
                         <div>
-                            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-                            <input type="text" id="category" name="category" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <label for="category" class="block text-gray-700 text-sm font-bold mb-2">Category:</label>
+                            <select id="category" name="category" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+                                <option value="Bags">Bags</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Shoes">Shoes</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Kids">Kids</option>
+                            </select>
                         </div>
                         
                         <!-- Size sản phẩm -->
@@ -62,19 +68,31 @@
                         <!-- Thương hiệu sản phẩm -->
                         <div>
                             <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
-                            <input type="text" id="brand" name="brand" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <select id="brand" name="brand" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+                                <option value="Louis Vuitton">Louis Vuitton</option>
+                                <option value="Chanel">Chanel</option>
+                                <option value="Hermes">Hermes</option>
+                                <option value="Gucci">Gucci</option>
+                            </select>
                         </div>
                         
                         <!-- Tags sản phẩm -->
                         <div>
                             <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
-                            <input type="text" id="tags" name="tags" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <select id="tags" name="tags" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2">
+                                <option value="Leather">Leather</option>
+                                <option value="Unisex">Unisex</option>
+                                <option value="Formal">Formal</option>
+                                <option value="Sport">Sport</option>
+                                <option value="Handmade">Handmade</option>
+                                <option value="Casual">Casual</option>
+                            </select>
                         </div>
                         
                         <!-- Số lượng sản phẩm -->
                         <div>
                             <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
-                            <input type="number" id="amount" name="amount" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <input type="number" id="amount" name="amount" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="1" min="1">
                         </div>
                     </div>
                     <div class="mt-4 flex justify-end">

@@ -22,7 +22,6 @@ document.querySelector('form').addEventListener('submit', async function (event)
             throw new Error('Failed to create order');
         }
 
-        // Nếu lưu thành công, chuyển hướng đến trang order
         setTimeout(() => {
             window.location.href = '/order';
         }, 2000); // Sau 2 giây
