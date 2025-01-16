@@ -83,14 +83,14 @@
                     <div class="product__details__text">
                         <h4><%= product.title %></h4>
                         <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
                             <i class="fa fa-star-o"></i>
                             <span> - 5 Reviews</span>
                         </div>
-                        <h3><%= product.price %> ₫</h3>
+                        <h3><%= new Intl.NumberFormat('vi-VN').format(product.price * 1000) %> ₫</h3>
                         <p><%= product.description %></p>
                         <div class="product__details__option">
                             <div class="product__details__option__size">
@@ -99,7 +99,7 @@
                                     <input type="radio" id="<%= product.size %>">
                                 </label>
                             </div>
-                            <div class="product__details__option__color">
+                            <!-- <div class="product__details__option__color">
                                 <span>Color:</span>
                                 <label class="c-1" for="sp-1">
                                     <input type="radio" id="sp-1">
@@ -116,25 +116,25 @@
                                 <label class="c-9" for="sp-9">
                                     <input type="radio" id="sp-9">
                                 </label>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="product__details__cart__option">
-                            <div class="quantity">
+                            <!-- <div class="quantity">
                                 <div class="pro-qty">
                                     <input type="text" value="1">
                                 </div>
-                            </div>
-                            <a href="#" class="primary-btn">add to cart</a>
+                            </div> -->
+                            <a href="/shop" class="primary-btn">Continue shopping</a>
                         </div>
                         <div class="product__details__btns__option">
-                            <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
-                            <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                            <!-- <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
+                            <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a> -->
                         </div>
                         <div class="product__details__last__option">
                             <h5><span>Guaranteed Safe Checkout</span></h5>
                             <img src="/img/shop-details/details-payment.png" alt="">
                             <ul>
-                                <li><span>SKU:</span> 3812912</li>
+                                <!-- <li><span>SKU:</span> 3812912</li> -->
                                 <li><span>Categories:</span> <%= product.category %></li>
                                 <li><span>Tag:</span> <%= product.tags %></li>
                             </ul>
@@ -150,14 +150,14 @@
                                 <a class="nav-link active" data-toggle="tab" href="#tabs-5"
                                 role="tab">Description</a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Customer
                                 Previews(5)</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-7" role="tab">Additional
                                 information</a>
-                            </li>
+                            </li> -->
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-5" role="tabpanel">
