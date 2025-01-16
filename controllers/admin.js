@@ -305,12 +305,27 @@ exports.getRevenueReport = async (req, res) => {
             return (compareDates(formattedStartDate, orderDate) != 1) && (compareDates(orderDate, formattedCurDate) != 1)
         });
 
-        const revenueData = orders.map(order => ({
-            date: order.createdAt.split(' ')[1],
-            amount: order.products.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) // Tính tổng amount
+        const revenueData = orders.reduce((acc, order) => {
+            const orderDate = order.createdAt.split(' ')[1];
+            const amount = order.products.reduce((sum, item) => sum + (item.product.price * item.quantity), 0); // Tính tổng amount cho đơn hàng
+        
+            // Nếu ngày đã có trong acc thì cộng dồn amount, nếu không thì thêm mới
+            if (acc[orderDate]) {
+                acc[orderDate] += amount;
+            } else {
+                acc[orderDate] = amount;
+            }
+        
+            return acc;
+        }, {});
+        
+        // Chuyển đổi kết quả từ đối tượng sang mảng để trả về
+        const result = Object.keys(revenueData).map(date => ({
+            date,
+            amount: revenueData[date]
         }));
 
-        res.json(revenueData);
+        res.json(result);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching revenue report');
